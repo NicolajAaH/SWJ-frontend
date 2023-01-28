@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native
 export default function DetailedJob({ route, navigation }: { navigation: any, route: any }) {
 
     // State holding all data.
-    const [data, setData] = useState({});
+    const [data, setData] = useState<Job>(new Job());
 
     const { jobId } = route.params;
 
@@ -24,12 +24,39 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{data.title}</Text>
-            <Text style={styles.description}>Description: {data.description}</Text>
-            <Text style={styles.location}>Location: {data.location}</Text>
-            <Text style={styles.jobType}>Jobtype: {data.jobType}</Text>
-            <Text style={styles.salary}>Salary: {data.salary} DKK/year</Text>
+            <Text style={styles.information}>Company: {data.company?.name} </Text>
+            <Text style={styles.information}>Description: {data.description}</Text>
+            <Text style={styles.information}>Location: {data.location}</Text>
+            <Text style={styles.information}>Jobtype: {data.jobType}</Text>
+            <Text style={styles.information}>Salary: {data.salary} DKK/year</Text>
+            <Text style={styles.information}>Created At: {data.createdAt}</Text>
+            <Text style={styles.information}>Updated At: {data.updatedAt}</Text>
+            <Text style={styles.information}>Expires At: {data.expriresAt}</Text>
         </View>
     );
+}
+
+export class Job {
+    id!: string;
+    title!: string;
+    description!: string;
+    location!: string;
+    jobType!: string;
+    salary!: number;
+    company!: Company;
+    createdAt!: Date;
+    updatedAt!: Date;
+    expriresAt!: Date;
+}
+
+export class Company {
+    id!: string;
+    name!: string;
+    description!: string;
+    website!: string;
+    email!: string;
+    createdAt!: Date;
+    updatedAt!: Date;
 }
 
 const styles = StyleSheet.create({
@@ -51,22 +78,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         color: '#333'
     },
-    description: {
-        fontSize: 18,
-        color: '#666',
-        marginBottom: 5
-    },
-    location: {
-        fontSize: 18,
-        color: '#666',
-        marginBottom: 5
-    },
-    jobType: {
-        fontSize: 18,
-        color: '#666',
-        marginBottom: 5
-    },
-    salary: {
+    information: {
         fontSize: 18,
         color: '#666',
         marginBottom: 5
