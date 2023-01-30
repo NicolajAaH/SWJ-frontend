@@ -6,6 +6,10 @@ import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import JobList from './components/JobList';
 import DetailedJob from './components/DetailedJob';
+import Apply from './components/Apply';
+import Login from './components/Login';
+import Register from './components/Register';
+import CreateJob from './components/CreateJob';
 
 const Stack = createNativeStackNavigator();
 const MyTheme = {
@@ -26,6 +30,10 @@ export default function App() {
           <Stack.Navigator initialRouteName='Home'>
             <Stack.Screen name="Home" component={JobList} />
             <Stack.Screen name="DetailedJob" component={DetailedJob} />
+            <Stack.Screen name="Apply" component={Apply} />
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Register" component={Register} />
+            <Stack.Screen name="CreateJob" component={CreateJob} />
           </Stack.Navigator>
       </NavigationContainer>
     );

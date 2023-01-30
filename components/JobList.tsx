@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from "react-native";
+import jwt_decode from "jwt-decode";
 
 export default function JobList({ navigation }: { navigation: any }) {
 
@@ -9,7 +10,7 @@ export default function JobList({ navigation }: { navigation: any }) {
   // Fetch job list once component is mounted
   useEffect(() => {
     async function fetchJobs() {
-      const response = await fetch(`http://localhost:8081/api/bff/job`, {
+      const response = await fetch(`http://localhost:8080/api/bff/job`, {
         method: 'GET',
       });
       const json = await response.json();
@@ -17,6 +18,33 @@ export default function JobList({ navigation }: { navigation: any }) {
     }
     fetchJobs();
   }, []);
+
+  const handleLogout = async () => {
+    try {
+        localStorage.removeItem('userToken');
+    } catch (e) {
+      console.error(e);
+    } 
+};
+
+const handleCreateJob = async () => {
+  try {
+      navigation.navigate("CreateJob");
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+function isLoggedInAsCompany(){
+  if(!localStorage.getItem('userToken')){
+    return false;
+  }
+  const decodedToken = jwt_decode(localStorage.getItem('userToken'));
+  if(decodedToken.role === 'COMPANY'){
+    return true;
+  }
+}
+
 
   const renderJob = ({ item }: { item: any }) => (
     <TouchableOpacity style={styles.jobContainer} onPress={() => navigation.navigate("DetailedJob", { jobId: item.id })}>
@@ -28,11 +56,18 @@ export default function JobList({ navigation }: { navigation: any }) {
 
   return (
     <View style={styles.container}>
+      {isLoggedInAsCompany() ? (
+        <Button title='Create job' onPress={handleCreateJob}></Button>) : ( <Text></Text>
+        )}
       <FlatList
         data={data}
         renderItem={renderJob}
         keyExtractor={(job) => job.id}
       />
+      {localStorage.getItem('userToken') ? (
+        <Button title='Logout' onPress={handleLogout}></Button>) : (
+        <Button title='Login' onPress={() => navigation.navigate("Login")}></Button>
+        )}
     </View>
   );
 }

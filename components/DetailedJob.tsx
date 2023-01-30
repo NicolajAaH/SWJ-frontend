@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from "react-native";
+import { Job } from '../models/Job';
 
 export default function DetailedJob({ route, navigation }: { navigation: any, route: any }) {
 
@@ -8,18 +9,23 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
 
     const { jobId } = route.params;
 
+    const title = data.title;
+
     // Fetch job list once component is mounted
     useEffect(() => {
         async function fetchJobs() {
-            const response = await fetch(`http://localhost:8081/api/bff/job/${jobId}`, {
+            const response = await fetch(`http://localhost:8080/api/bff/job/${jobId}`, {
                 method: 'GET',
             });
             const json = await response.json();
             setData(json);
-            console.log(json)
         }
         fetchJobs();
     }, []);
+
+    const handleApply = () => {
+        navigation.navigate("Apply", {title, jobId})
+    }
 
     return (
         <View style={styles.container}>
@@ -31,32 +37,13 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
             <Text style={styles.information}>Salary: {data.salary} DKK/year</Text>
             <Text style={styles.information}>Created At: {data.createdAt}</Text>
             <Text style={styles.information}>Updated At: {data.updatedAt}</Text>
-            <Text style={styles.information}>Expires At: {data.expriresAt}</Text>
+            <Text style={styles.information}>Expires At: {data.expiresAt}</Text>
+
+            <TouchableOpacity onPress={handleApply} style={styles.submitButton}>
+                <Text style={styles.submitButtonText}>Submit</Text>
+            </TouchableOpacity>        
         </View>
     );
-}
-
-export class Job {
-    id!: string;
-    title!: string;
-    description!: string;
-    location!: string;
-    jobType!: string;
-    salary!: number;
-    company!: Company;
-    createdAt!: Date;
-    updatedAt!: Date;
-    expriresAt!: Date;
-}
-
-export class Company {
-    id!: string;
-    name!: string;
-    description!: string;
-    website!: string;
-    email!: string;
-    createdAt!: Date;
-    updatedAt!: Date;
 }
 
 const styles = StyleSheet.create({
@@ -82,5 +69,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#666',
         marginBottom: 5
+    },
+    submitButton: {
+        backgroundColor: 'blue',
+        padding: 10,
+        marginTop: 20,
+    },
+    submitButtonText: {
+        color: 'white',
+        fontSize: 18,
+        textAlign: 'center',
     }
 });

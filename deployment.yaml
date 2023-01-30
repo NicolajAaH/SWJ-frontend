@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-native-expo-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: react-native-expo
+  template:
+    metadata:
+      labels:
+        app: react-native-expo
+    spec:
+      containers:
+        - name: react-native-expo
+          image: nicolajh/swj-frontend
+          ports:
+            - containerPort: 19006
+          env:
+            - name: BFFURL
+              value: http://bff-service:8080/api/bff
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-native-expo-service
+spec:
+  selector:
+    app: react-native-expo
+  ports:
+    - name: react-native-expo
+      port: 8080
+      targetPort: 19006
+  type: LoadBalancer
+
+
+
