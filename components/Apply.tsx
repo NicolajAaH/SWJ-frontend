@@ -1,31 +1,34 @@
+import { Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 
 const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any }) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [coverLetter, setCoverLetter] = useState('');
-    const [resume, setResume] = useState('');
+    const [application, setApplication] = useState('');
 
     const { title, jobId } = route.params;
 
     const handleSubmit = async () => {
+        if (name === '' || email === '' || application === '') {
+            alert('Please fill in all fields');
+            return;
+        }
         try {
             const response = await fetch(`http://localhost:8080/api/bff/job/${jobId}/apply`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ jobId, userId: localStorage.getItem('userToken'), "status": "PENDING" }),
+                body: JSON.stringify({ jobId, userId: localStorage.getItem('userToken'), "status": "PENDING", application }),
             });
             if (response.ok) {
                 navigation.navigate('Home');
                 // Clear the form fields
                 setName('');
                 setEmail('');
-                setCoverLetter('');
-                setResume('');
+                setApplication('');
             } else {
                 throw new Error('Application failed');
             }
@@ -40,7 +43,7 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
             <View style={styles.container}>
                 <Text style={styles.title}>{title}</Text>
                 <Text style={styles.information}>You must be logged in to apply for a job.</Text>
-                <Button title="Login" onPress={() => navigation.navigate('Login')} />
+                <Button onClick={() => navigation.navigate('Login')}>Login</Button>
             </View>
         );
     }
@@ -49,38 +52,32 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
         <View style={styles.container}>
             <Text style={styles.title}>{title}</Text>
 
-            <Text style={styles.label}>Apply for job:</Text>
-            <Text style={styles.label}>Name:</Text>
-            <TextInput
-                style={styles.input}
+            <Text style={styles.label}>Apply for job</Text>
+            <br/>
+            <TextField
                 value={name}
-                onChangeText={(text) => setName(text)}
+                label="Name"
+                placeholder='Name'
+                onChange={(text) => setName(text.target.value)}
             />
-            <Text style={styles.label}>Email:</Text>
-            <TextInput
-                style={styles.input}
+            <br/>
+            <TextField
                 value={email}
-                onChangeText={(text) => setEmail(text)}
+                label="Email"
+                placeholder='Email'
+                onChange={(text) => setEmail(text.target.value)}
             />
-            <Text style={styles.label}>Cover Letter:</Text>
-            <TextInput
-                style={styles.inputBigText}
-                value={coverLetter}
-                onChangeText={(text) => setCoverLetter(text)}
+            <br/>
+            <TextField
+                value={application}
+                label="Application"
+                placeholder='Write your application here'
+                onChange={(text) => setApplication(text.target.value)}
                 multiline
-                numberOfLines={10}
+                rows={10}
             />
-            <Text style={styles.label}>Resume:</Text>
-            <TextInput
-                style={styles.inputBigText}
-                value={resume}
-                onChangeText={(text) => setResume(text)}
-                multiline
-                numberOfLines={10}
-            />
-            <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
-                <Text style={styles.submitButtonText}>Submit</Text>
-            </TouchableOpacity>
+            <br/>
+            <Button variant="contained" onClick={handleSubmit}>Submit</Button>
         </View>
     );
 };

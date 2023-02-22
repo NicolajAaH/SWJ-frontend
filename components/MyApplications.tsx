@@ -1,22 +1,22 @@
+import jwtDecode from 'jwt-decode';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from "react-native";
 import { Application } from '../models/Application';
 
-export default function Applications({ route, navigation }: { navigation: any, route: any }) {
+export default function MyApplications({ route, navigation }: { navigation: any, route: any }) {
 
     // State holding all data.
     const [data, setData] = useState<Application[]>([]);
 
-    const { jobId, jobTitle } = route.params;
-
     // Fetch job list once component is mounted
     useEffect(() => {
+        const decodedToken = jwtDecode(localStorage.getItem('userToken'));
+        const userId = decodedToken.userId;
         async function fetchJobs() {
-            const response = await fetch(`http://localhost:8080/api/bff/job/${jobId}/applications`, {
+            const response = await fetch(`http://localhost:8080/api/bff/applications/${userId}`, {
                 method: 'GET',
             });
             const json = await response.json();
-            console.log(json)
             setData(json);
         }
         fetchJobs();
@@ -25,7 +25,6 @@ export default function Applications({ route, navigation }: { navigation: any, r
     const renderApplication = ({ item }: { item: Application }) => (
         <TouchableOpacity style={styles.applicationContainer} onPress={() => navigation.navigate("DetailedApplication", { application: item })}>
           <Text style={styles.applicationProperty}>Status: {item.status}</Text>
-          <Text style={styles.applicationProperty}>Applicant name: {item.user.name}</Text>
           <Text style={styles.applicationProperty}>Created at: {item.createdAt}</Text>
         </TouchableOpacity>
       );
@@ -33,7 +32,7 @@ export default function Applications({ route, navigation }: { navigation: any, r
     return (
         <View style={styles.container}>
             <Text style={{ fontSize: 30, fontWeight: 'bold', marginBottom: 20 }}>Applications</Text>
-            <Text>For job: {jobTitle}</Text>
+            <Text>For job: </Text>
             <FlatList
                 data={data}
                 renderItem={({ item }) => (renderApplication({ item }))}

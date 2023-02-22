@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { Switch } from 'react-native-paper';
+import { View, Text, StyleSheet } from 'react-native';
+import { Button, TextField, Switch } from '@mui/material';
 
 
 const UserRegistration = ({ navigation }: { navigation: any }) => {
@@ -71,50 +71,54 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
             <Text style={styles.title}>User Registration</Text>
             <Text>Company?</Text>
             <Switch
-                trackColor={{ false: '#767577', true: '#81b0ff' }}
-                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-                onValueChange={toggleSwitch}
+                onChange={toggleSwitch}
                 value={isEnabled}
             ></Switch>
-            <TextInput
-                style={styles.input}
+            <TextField
                 value={name}
-                onChangeText={setName}
+                onChange={(e) => setName(e.target.value)}
                 placeholder="Name"
+                label="Name"
+            />
+            <br/>
 
-            />
-            <TextInput
-                style={styles.input}
+            <TextField
                 value={email}
-                onChangeText={setEmail}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
+                label="Email"
             />
-            <TextInput
-                style={styles.input}
+                        <br/>
+
+            <TextField
                 value={password}
-                onChangeText={setPassword}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                secureTextEntry
+                type="password"
+                label="Password"
             />
-            <TextInput
-                style={styles.input}
+                        <br/>
+
+            <TextField
                 value={confirmPassword}
-                onChangeText={setConfirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm Password"
-                secureTextEntry
+                type="password"
+                label="Confirm Password"
             />
+                        <br/>
+
             {isEnabled ? (
-                <TextInput
-                    style={styles.input}
+                <TextField
                     value={website}
-                    onChangeText={setWebsite}
+                    onChange={(e) => setWebsite(e.target.value)}
                     placeholder="Website"
+                    label="Website"
                 />) : (
                 <Text></Text>
             )}
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Submit</Text>
-            </TouchableOpacity>
+            <br/>
+            <Button variant="contained" onClick={handleSubmit}>Submit</Button>
         </View>
     );
 };
@@ -122,8 +126,10 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
         justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
+        margin: 20,
     },
     title: {
         fontSize: 24,

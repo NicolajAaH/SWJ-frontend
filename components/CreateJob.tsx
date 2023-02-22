@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import DatePicker from 'react-date-picker';
 import jwtDecode from 'jwt-decode';
+import { Button, TextField } from '@mui/material';
 
 
 const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) => {
@@ -15,80 +16,82 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
 
   const handleCreateJob = async () => {
     try {
-        if(!title || !description || !location || !jobType || !salary || !expiresAt) {
-            alert('Please fill in all fields');
-            return;
-        }
+      if (!title || !description || !location || !jobType || !salary || !expiresAt) {
+        alert('Please fill in all fields');
+        return;
+      }
 
-        const decodedToken = jwtDecode(localStorage.getItem('userToken'));
-        const email = decodedToken.email;
+      const decodedToken = jwtDecode(localStorage.getItem('userToken'));
+      const email = decodedToken.email;
 
-        const response = await fetch(`http://localhost:8080/api/bff/job/${email}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ title, location, description, jobType, salary, expiresAt }),
-         });
-        if (response.ok) {
-            navigation.navigate('Home');
-            // Clear the form fields
-            setTitle('');
-            setDescription('');
-            setLocation('');
-            setJobType('');
-            setSalary('');
-            setExpiresAt(new Date());
-            navigation.navigate('Home');
-        } else {
-            throw new Error('Application failed');
-        }
+      const response = await fetch(`http://localhost:8080/api/bff/job/${email}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, location, description, jobType, salary, expiresAt }),
+      });
+      if (response.ok) {
+        navigation.navigate('Home');
+        // Clear the form fields
+        setTitle('');
+        setDescription('');
+        setLocation('');
+        setJobType('');
+        setSalary('');
+        setExpiresAt(new Date());
+        navigation.navigate('Home');
+      } else {
+        throw new Error('Application failed');
+      }
     } catch (e) {
-        console.error(e);
-        return false;
+      console.error(e);
+      return false;
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Title</Text>
-      <TextInput
-        style={styles.input}
+      <TextField
         value={title}
-        onChangeText={(text) => setTitle(text)}
+        placeholder="Title"
+        label="Title"
+        onChange={(text) => setTitle(text.target.value)}
       />
-      <Text style={styles.label}>Description</Text>
-      <TextInput
-        style={styles.input}
+      <br />
+      <TextField
         value={description}
-        onChangeText={(text) => setDescription(text)}
+        placeholder="Description"
+        label="Description"
+        onChange={(text) => setDescription(text.target.value)}
       />
-      <Text style={styles.label}>Location</Text>
-      <TextInput
-        style={styles.input}
+      <br />
+      <TextField
         value={location}
-        onChangeText={(text) => setLocation(text)}
+        placeholder="Location"
+        label="Location"
+        onChange={(text) => setLocation(text.target.value)}
       />
-      <Text style={styles.label}>Job Type</Text>
-      <TextInput
-        style={styles.input}
+      <br />
+      <TextField
         value={jobType}
-        onChangeText={(text) => setJobType(text)}
+        placeholder="Job Type"
+        label="Job Type"
+        onChange={(text) => setJobType(text.target.value)}
       />
-      <Text style={styles.label}>Salary</Text>
-      <TextInput
-        style={styles.input}
+      <br />
+      <TextField
         value={salary}
-        onChangeText={(text) => setSalary(text)}
+        placeholder="Salary (DKK/year)"
+        label="Salary (DKK/year)"
+        type="number"
+        onChange={(text) => setSalary(text.target.value)}
       />
-        <Text style={styles.label}>Expires At</Text>
-        <DatePicker onChange={setExpiresAt} value={expiresAt} />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleCreateJob}
-      >
-        <Text style={styles.buttonText}>Create Job</Text>
-      </TouchableOpacity>
+      <br />
+      <Text style={styles.label}>Expires At</Text>
+      <DatePicker onChange={setExpiresAt} value={expiresAt} />
+      <br />
+      <Button variant="contained" onClick={handleCreateJob}>Create Job</Button>
     </View>
   );
 };
@@ -125,6 +128,6 @@ const styles = StyleSheet.create({
 });
 export default CreateJobPage;
 function jwt_decode(arg0: string | null) {
-    throw new Error('Function not implemented.');
+  throw new Error('Function not implemented.');
 }
 

@@ -1,5 +1,6 @@
+import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Job } from '../models/Job';
 
 export default function DetailedJob({ route, navigation }: { navigation: any, route: any }) {
@@ -39,9 +40,7 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
             <Text style={styles.information}>Updated At: {data.updatedAt}</Text>
             <Text style={styles.information}>Expires At: {data.expiresAt}</Text>
 
-            <TouchableOpacity onPress={handleApply} style={styles.submitButton}>
-                <Text style={styles.submitButtonText}>Apply</Text>
-            </TouchableOpacity>        
+            <Button variant="contained" onClick={handleApply}>Apply</Button>    
         </View>
     );
 }

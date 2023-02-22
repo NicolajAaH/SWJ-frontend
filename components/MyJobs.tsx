@@ -22,13 +22,14 @@ export default function MyJobs({ navigation }: { navigation: any }) {
 const handleLogout = async () => {
   try {
       localStorage.removeItem('userToken');
+      navigation.navigate('Login');
   } catch (e) {
     console.error(e);
   } 
 };
 
   const renderJob = ({ item }: { item: any }) => (
-    <TouchableOpacity style={styles.jobContainer} onPress={() => navigation.navigate("DetailedJob", { jobId: item.id })}>
+    <TouchableOpacity style={styles.jobContainer} onPress={() => navigation.navigate("Applications", { jobId: item.id, jobTitle: item.title })}>
       <Text style={styles.jobTitle}>{item.title}</Text>
       <Text style={styles.jobType}>{item.jobType}</Text>
       <Text style={styles.jobLocation}>{item.location}</Text>
@@ -37,6 +38,8 @@ const handleLogout = async () => {
 
   return (
     <View style={styles.container}>
+      <Text style={{ fontSize: 30, fontWeight: 'bold', marginBottom: 20 }}>My Jobs</Text>
+      <Text>Click on a job to see applications for the job</Text>
       <FlatList
         data={data.jobs}
         renderItem={renderJob}

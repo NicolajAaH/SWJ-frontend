@@ -1,11 +1,13 @@
+import { Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 const Login = ({ navigation }: { navigation: any }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleLogin = async () => {
+        if(!email || !password) return alert('Please enter your email and password');
         try {
             const response = await fetch(`http://localhost:8080/api/bff/auth/login`, {
                 method: 'POST',
@@ -23,7 +25,7 @@ const Login = ({ navigation }: { navigation: any }) => {
             }
         } catch (e) {
             console.error(e);
-            return false;
+            alert('Login failed');
         }
     };
 
@@ -31,31 +33,31 @@ const Login = ({ navigation }: { navigation: any }) => {
         navigation.navigate('Register');
     };
 
-
-
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Login</Text>
-            <TextInput
-                style={styles.input}
+            <TextField
+                variant='outlined'
                 placeholder="Username"
+                label="Username"
+                required
                 value={email}
-                onChangeText={(text) => setEmail(text)}
+                onChange={(e) => setEmail(e.target.value)}
             />
-            <TextInput
-                style={styles.input}
+            <br/>
+            <TextField
+                variant='outlined'
+                type="password"
+                required
+                label="Password"
                 placeholder="Password"
-                secureTextEntry
                 value={password}
-                onChangeText={(text) => setPassword(text)}
+                onChange={(e) => setPassword(e.target.value)}
             />
-            <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.button} onPress={handleRegister}>
-                <Text style={styles.buttonText}>Register</Text>
-            </TouchableOpacity>
+                        <br/>
+            <Button variant="contained" onClick={handleLogin}>Login</Button>
+            <br/>
+            <Button variant="contained" onClick={handleRegister}>Register</Button>
         </View>
     );
 };
@@ -66,27 +68,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#F5FCFF',
+        margin: 20,
     },
     header: {
         fontSize: 24,
         marginBottom: 20,
-    },
-    input: {
-        width: 200,
-        height: 44,
-        padding: 10,
-        marginBottom: 10,
-        borderWidth: 1,
-        borderColor: 'gray',
-    },
-    button: {
-        backgroundColor: 'blue',
-        padding: 10,
-        marginTop: 10,
-    },
-    buttonText: {
-        color: 'white',
-        fontSize: 18,
     },
 });
 

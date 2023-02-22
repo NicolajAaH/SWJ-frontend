@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import jwt_decode from "jwt-decode";
+import { Button } from '@mui/material';
+
 
 export default function JobList({ navigation }: { navigation: any }) {
 
   // State holding all data.
   const [data, setData] = useState([]);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userToken'));
+
 
   // Fetch job list once component is mounted
   useEffect(() => {
@@ -19,40 +24,66 @@ export default function JobList({ navigation }: { navigation: any }) {
     fetchJobs();
   }, []);
 
-  const handleLogout = async () => {
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem('userToken'));
+  }, []);
+
+  const handleLogout = () => {
     try {
-        localStorage.removeItem('userToken');
+      localStorage.removeItem('userToken');
+      setIsLoggedIn(false);
+      alert('You have been logged out');
+      navigation.navigate('Login');
     } catch (e) {
       console.error(e);
-    } 
-};
+    }
+  };
 
-const handleCreateJob = async () => {
-  try {
+  const handleCreateJob = async () => {
+    try {
       navigation.navigate("CreateJob");
-  } catch (e) {
-    console.error(e);
-  }
-};
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
-const handleMyPostedJobs = async () => {
-  try {
+  const handleMyPostedJobs = async () => {
+    try {
       navigation.navigate("MyJobs");
-  } catch (e) {
-    console.error(e);
-  }
-};
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
-function isLoggedInAsCompany(){
-  if(!localStorage.getItem('userToken')){
+  const handleMyApplictions = async () => {
+    try {
+      navigation.navigate("MyApplications");
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  function isLoggedInAsCompany() {
+    if (!localStorage.getItem('userToken')) {
+      return false;
+    }
+    const decodedToken = jwt_decode(localStorage.getItem('userToken'));
+    if (decodedToken.role === 'COMPANY') {
+      return true;
+    }
     return false;
   }
-  const decodedToken = jwt_decode(localStorage.getItem('userToken'));
-  if(decodedToken.role === 'COMPANY'){
-    return true;
+
+  function isLoggedInAsApplicant() {
+    if (!localStorage.getItem('userToken')) {
+      return false;
+    }
+    const decodedToken = jwt_decode(localStorage.getItem('userToken'));
+    if (decodedToken.role === 'APPLICANT') {
+      return true;
+    }
+    return false;
   }
-  return false;
-}
 
 
   const renderJob = ({ item }: { item: any }) => (
@@ -66,20 +97,24 @@ function isLoggedInAsCompany(){
   return (
     <View style={styles.container}>
       {isLoggedInAsCompany() ? (
-        <Button title='Create job' onPress={handleCreateJob}></Button>) : ( <Text></Text>
-        )}
+        <Button variant="contained" onClick={handleCreateJob}>Create job</Button>) : (<Text></Text>
+      )}
       {isLoggedInAsCompany() ? (
-        <Button title='My posted jobs' onPress={handleMyPostedJobs}></Button>) : ( <Text></Text>
-        )}
+        <Button variant="contained" onClick={handleMyPostedJobs}>My posted jobs</Button>) : (<Text></Text>
+      )}
+
+      {isLoggedInAsApplicant() ? (
+        <Button variant="contained" onClick={handleMyApplictions}>My applications</Button>) : (<Text></Text>
+      )}
       <FlatList
         data={data}
         renderItem={renderJob}
         keyExtractor={(job) => job.id}
       />
-      {localStorage.getItem('userToken') ? (
-        <Button title='Logout' onPress={handleLogout}></Button>) : (
-        <Button title='Login' onPress={() => navigation.navigate("Login")}></Button>
-        )}
+      {isLoggedIn ? (
+        <Button variant="contained" onClick={handleLogout}>Logout</Button>) : (
+        <Button variant="contained" onClick={() => navigation.navigate("Login")}>Login</Button>
+      )}
     </View>
   );
 }
