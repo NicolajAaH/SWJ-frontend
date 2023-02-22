@@ -10,6 +10,7 @@ import Apply from './components/Apply';
 import Login from './components/Login';
 import Register from './components/Register';
 import CreateJob from './components/CreateJob';
+import MyJobs from './components/MyJobs';
 
 const Stack = createNativeStackNavigator();
 const MyTheme = {
@@ -34,6 +35,7 @@ export default function App() {
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="CreateJob" component={CreateJob} />
+            <Stack.Screen name="MyJobs" component={MyJobs} />
           </Stack.Navigator>
       </NavigationContainer>
     );

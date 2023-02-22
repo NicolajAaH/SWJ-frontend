@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from "react-native";
 import { Job } from '../models/Job';
 
-export default function DetailedJob({ route, navigation }: { navigation: any, route: any }) {
+export default function Applications({ route, navigation }: { navigation: any, route: any }) {
 
     // State holding all data.
     const [data, setData] = useState<Job>(new Job());
@@ -14,7 +14,7 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
     // Fetch job list once component is mounted
     useEffect(() => {
         async function fetchJobs() {
-            const response = await fetch(`http://localhost:8080/api/bff/job/${jobId}`, {
+            const response = await fetch(`http://localhost:8080/api/bff/job/${jobId}/applications`, {
                 method: 'GET',
             });
             const json = await response.json();
@@ -29,19 +29,7 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>{data.title}</Text>
-            <Text style={styles.information}>Company: {data.company?.name} </Text>
-            <Text style={styles.information}>Description: {data.description}</Text>
-            <Text style={styles.information}>Location: {data.location}</Text>
-            <Text style={styles.information}>Jobtype: {data.jobType}</Text>
-            <Text style={styles.information}>Salary: {data.salary} DKK/year</Text>
-            <Text style={styles.information}>Created At: {data.createdAt}</Text>
-            <Text style={styles.information}>Updated At: {data.updatedAt}</Text>
-            <Text style={styles.information}>Expires At: {data.expiresAt}</Text>
-
-            <TouchableOpacity onPress={handleApply} style={styles.submitButton}>
-                <Text style={styles.submitButtonText}>Apply</Text>
-            </TouchableOpacity>        
+     
         </View>
     );
 }
