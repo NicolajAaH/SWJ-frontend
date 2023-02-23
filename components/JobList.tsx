@@ -6,6 +6,8 @@ import { Button } from '@mui/material';
 
 export default function JobList({ navigation }: { navigation: any }) {
 
+  //TODO ADD SEARCH AND FILTER FUNCTINOALITY AND MOVE BUTTONS TO NAV BAR
+
   // State holding all data.
   const [data, setData] = useState([]);
 
@@ -14,30 +16,25 @@ export default function JobList({ navigation }: { navigation: any }) {
 
   // Fetch job list once component is mounted
   useEffect(() => {
-    async function fetchJobs() {
-      const response = await fetch(`http://localhost:8080/api/bff/job`, {
-        method: 'GET',
-      });
-      const json = await response.json();
-      setData(json);
-    }
-    fetchJobs();
+    const subscribe = navigation.addListener('focus', () => { //TODO slet hvis det ikke virker
+      async function fetchJobs() {
+        const response = await fetch(`http://localhost:8080/api/bff/job`, {
+          method: 'GET',
+        });
+        const json = await response.json();
+        setData(json);
+      }
+      fetchJobs();
+    });
   }, []);
 
   useEffect(() => {
-    setIsLoggedIn(!!localStorage.getItem('userToken'));
+    const subscribe = navigation.addListener('focus', () => {
+      setIsLoggedIn(!!localStorage.getItem('userToken'));
+    });
   }, []);
 
-  const handleLogout = () => {
-    try {
-      localStorage.removeItem('userToken');
-      setIsLoggedIn(false);
-      alert('You have been logged out');
-      navigation.navigate('Login');
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  
 
   const handleCreateJob = async () => {
     try {
@@ -111,10 +108,6 @@ export default function JobList({ navigation }: { navigation: any }) {
         renderItem={renderJob}
         keyExtractor={(job) => job.id}
       />
-      {isLoggedIn ? (
-        <Button variant="contained" onClick={handleLogout}>Logout</Button>) : (
-        <Button variant="contained" onClick={() => navigation.navigate("Login")}>Login</Button>
-      )}
     </View>
   );
 }
