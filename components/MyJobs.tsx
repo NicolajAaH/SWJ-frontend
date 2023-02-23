@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from "react-native";
 import jwt_decode from "jwt-decode";
+import { CircularProgress } from '@mui/material';
 
 export default function MyJobs({ navigation }: { navigation: any }) {
 
   // State holding all data.
   const [data, setData] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(true);
+
 
   // Fetch job list once component is mounted
   useEffect(() => {
@@ -15,18 +19,11 @@ export default function MyJobs({ navigation }: { navigation: any }) {
       });
       const json = await response.json();
       setData(json);
+      setIsLoading(false);
     }
     fetchJobs();
   }, []);
 
-const handleLogout = async () => {
-  try {
-      localStorage.removeItem('userToken');
-      navigation.navigate('Login');
-  } catch (e) {
-    console.error(e);
-  } 
-};
 
   const renderJob = ({ item }: { item: any }) => (
     <TouchableOpacity style={styles.jobContainer} onPress={() => navigation.navigate("Applications", { jobId: item.id, jobTitle: item.title })}>
@@ -40,15 +37,12 @@ const handleLogout = async () => {
     <View style={styles.container}>
       <Text style={{ fontSize: 30, fontWeight: 'bold', marginBottom: 20 }}>My Jobs</Text>
       <Text>Click on a job to see applications for the job</Text>
+      {isLoading ? <CircularProgress /> : null}
       <FlatList
         data={data.jobs}
         renderItem={renderJob}
         keyExtractor={(job) => job.id}
       />
-      {localStorage.getItem('userToken') ? (
-        <Button title='Logout' onPress={handleLogout}></Button>) : (
-        <Text></Text>
-        )}
     </View>
   );
 }

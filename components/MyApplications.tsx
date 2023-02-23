@@ -8,6 +8,9 @@ export default function MyApplications({ route, navigation }: { navigation: any,
     // State holding all data.
     const [data, setData] = useState<Application[]>([]);
 
+    const [isLoading, setIsLoading] = useState(true);
+
+
     // Fetch job list once component is mounted
     useEffect(() => {
         const decodedToken = jwtDecode(localStorage.getItem('userToken'));
@@ -18,6 +21,7 @@ export default function MyApplications({ route, navigation }: { navigation: any,
             });
             const json = await response.json();
             setData(json);
+            setIsLoading(false);
         }
         fetchJobs();
     }, []);
@@ -25,7 +29,7 @@ export default function MyApplications({ route, navigation }: { navigation: any,
     const renderApplication = ({ item }: { item: Application }) => (
         <TouchableOpacity style={styles.applicationContainer} onPress={() => navigation.navigate("DetailedApplication", { application: item })}>
           <Text style={styles.applicationProperty}>Status: {item.status}</Text>
-          <Text style={styles.applicationProperty}>Created at: {item.createdAt}</Text>
+          <Text style={styles.applicationProperty}>Created at: {new Date(item.createdAt).toLocaleString()}</Text>
         </TouchableOpacity>
       );
 
@@ -33,6 +37,8 @@ export default function MyApplications({ route, navigation }: { navigation: any,
         <View style={styles.container}>
             <Text style={{ fontSize: 30, fontWeight: 'bold', marginBottom: 20 }}>Applications</Text>
             <Text>For job: </Text>
+            {isLoading ? <CircularProgress /> : null}
+
             <FlatList
                 data={data}
                 renderItem={({ item }) => (renderApplication({ item }))}

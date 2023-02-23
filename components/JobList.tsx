@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import jwt_decode from "jwt-decode";
-import { Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 
 
 export default function JobList({ navigation }: { navigation: any }) {
 
-  //TODO ADD SEARCH AND FILTER FUNCTINOALITY AND MOVE BUTTONS TO NAV BAR
+  //TODO ADD SEARCH AND FILTER FUNCTINOALITY
 
   // State holding all data.
   const [data, setData] = useState([]);
 
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userToken'));
+
+  const [isLoading, setIsLoading] = useState(true);
+
 
 
   // Fetch job list once component is mounted
@@ -23,6 +26,7 @@ export default function JobList({ navigation }: { navigation: any }) {
         });
         const json = await response.json();
         setData(json);
+        setIsLoading(false);
       }
       fetchJobs();
     });
@@ -93,16 +97,20 @@ export default function JobList({ navigation }: { navigation: any }) {
 
   return (
     <View style={styles.container}>
+      <h1 style={styles.title}>SoftwareJobs</h1>
+      <View style={styles.inline}>
       {isLoggedInAsCompany() ? (
-        <Button variant="contained" onClick={handleCreateJob}>Create job</Button>) : (<Text></Text>
+        <Button variant="contained" onClick={handleCreateJob}>Create job</Button>) : (null
       )}
       {isLoggedInAsCompany() ? (
-        <Button variant="contained" onClick={handleMyPostedJobs}>My posted jobs</Button>) : (<Text></Text>
+        <Button variant="contained" onClick={handleMyPostedJobs}>My posted jobs</Button>) : (null
       )}
 
       {isLoggedInAsApplicant() ? (
-        <Button variant="contained" onClick={handleMyApplictions}>My applications</Button>) : (<Text></Text>
+        <Button variant="contained" onClick={handleMyApplictions}>My applications</Button>) : (null
       )}
+      </View>
+      {isLoading ? <CircularProgress /> : null}
       <FlatList
         data={data}
         renderItem={renderJob}
@@ -117,6 +125,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f8f9fa',
     padding: 20
+  },
+  title: {
+    fontSize: 50,
+    fontWeight: 'bold',
+    color: '#333333',
+    marginBottom: 20,
+    textAlign: 'center'
   },
   jobContainer: {
     backgroundColor: '#ffffff',
@@ -146,5 +161,11 @@ const styles = StyleSheet.create({
   jobLocation: {
     fontSize: 14,
     color: '#666666',
+  },
+  inline: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20
   }
 });

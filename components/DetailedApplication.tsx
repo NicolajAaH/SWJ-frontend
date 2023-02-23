@@ -1,13 +1,30 @@
 import { Button } from '@mui/material';
 import React from 'react';
 import { View, Text, StyleSheet } from "react-native";
+import jwt_decode from "jwt-decode";
+
 
 export default function DetailedApplication({ route, navigation }: { navigation: any, route: any }) {
 
     const {application}= route.params;
 
+    function isLoggedInAsCompany() {
+        if (!localStorage.getItem('userToken')) {
+          return false;
+        }
+        const decodedToken = jwt_decode(localStorage.getItem('userToken'));
+        if (decodedToken.role === 'COMPANY') {
+          return true;
+        }
+        return false;
+      }
+
     const handleAccept = async () => {
         try {
+            if(application.status === "ACCEPTED"){
+                alert("Application already accepted");
+                return;
+            }
             application.status = "ACCEPTED";
             const response = await fetch(`http://localhost:8080/api/bff/application/${application.id}`, {
                 method: 'PUT',
@@ -17,6 +34,7 @@ export default function DetailedApplication({ route, navigation }: { navigation:
                 body: JSON.stringify(application),
             });
             if (response.ok) {
+                alert('Application accepted');
                 navigation.navigate('Home');
             } else {
                 alert('Failed to accept application');
@@ -29,6 +47,10 @@ export default function DetailedApplication({ route, navigation }: { navigation:
 
     const handleReject = async () => {
         try {
+            if(application.status === "REJECTED"){
+                alert("Application already rejected");
+                return;
+            }
             application.status = "REJECTED";
             const response = await fetch(`http://localhost:8080/api/bff/application/${application.id}`, {
                 method: 'PUT',
@@ -38,6 +60,7 @@ export default function DetailedApplication({ route, navigation }: { navigation:
                 body: JSON.stringify(application),
             });
             if (response.ok) {
+                alert('Application rejected');
                 navigation.navigate('Home');
             } else {
                 alert('Failed to reject application');
@@ -54,17 +77,17 @@ export default function DetailedApplication({ route, navigation }: { navigation:
             <Text style={styles.information}>Applicant name: {application.user.name}</Text>
             <Text style={styles.information}>Applicant email: {application.user.email}</Text>
             <Text style={styles.information}>Status: {application.status}</Text>
-            <Text style={styles.information}>Created at: {application.createdAt}</Text>
+            <Text style={styles.information}>Created at: {new Date(application.createdAt).toLocaleString()}</Text>
             <Text style={styles.information}>Application:</Text>
             <View style={styles.outlinedContainer}>
                 <Text style={styles.application}>{application.application}</Text>
             </View>
 
-            <View style={styles.inlineContainer}>
+            {isLoggedInAsCompany() ? (<View style={styles.inlineContainer}>
                 <Button variant='contained' onClick={handleAccept} color="success">Accept</Button>
                 &nbsp;&nbsp;
                 <Button variant='contained' onClick={handleReject} color="error">Reject</Button>
-            </View>
+            </View>) : (null)}
         </View>
     );
 }

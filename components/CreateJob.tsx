@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import DatePicker from 'react-date-picker';
 import jwtDecode from 'jwt-decode';
-import { Button, TextField } from '@mui/material';
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 
 
 const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) => {
@@ -18,6 +18,10 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
     try {
       if (!title || !description || !location || !jobType || !salary || !expiresAt) {
         alert('Please fill in all fields');
+        return;
+      }
+      if(salary < 0) {
+        alert('Salary must be a positive number');
         return;
       }
 
@@ -52,6 +56,7 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
 
   return (
     <View style={styles.container}>
+      <h1>Create Job</h1>
       <TextField
         value={title}
         placeholder="Title"
@@ -73,12 +78,26 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
         onChange={(text) => setLocation(text.target.value)}
       />
       <br />
-      <TextField
-        value={jobType}
-        placeholder="Job Type"
-        label="Job Type"
-        onChange={(text) => setJobType(text.target.value)}
-      />
+      <FormControl>
+      <InputLabel id="job-type-label">Job Type</InputLabel>
+      <Select
+    labelId="job-type-label"
+    id="job-type-select"
+    value={jobType}
+    label="JobType"
+    style={{ width: 200 }}
+    onChange={(text) => setJobType(text.target.value)}
+  >
+    <MenuItem value={'FRONTEND'}>Frontend</MenuItem>
+    <MenuItem value={'BACKEND'}>Backend</MenuItem>
+    <MenuItem value={'ARCHITECT'}>Architect</MenuItem>
+    <MenuItem value={'DEVOPS'}>DevOps</MenuItem>
+    <MenuItem value={'FULLSTACK'}>Fullstack</MenuItem>
+    <MenuItem value={'QA'}>QA</MenuItem>
+    <MenuItem value={'MANAGER'}>Manager</MenuItem>
+    <MenuItem value={'OTHER'}>Other</MenuItem>
+  </Select>
+  </FormControl>
       <br />
       <TextField
         value={salary}
@@ -127,7 +146,4 @@ const styles = StyleSheet.create({
   }
 });
 export default CreateJobPage;
-function jwt_decode(arg0: string | null) {
-  throw new Error('Function not implemented.');
-}
 

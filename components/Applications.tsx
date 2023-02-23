@@ -1,3 +1,4 @@
+import { CircularProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from "react-native";
 import { Application } from '../models/Application';
@@ -6,6 +7,8 @@ export default function Applications({ route, navigation }: { navigation: any, r
 
     // State holding all data.
     const [data, setData] = useState<Application[]>([]);
+
+    const [isLoading, setIsLoading] = useState(true);
 
     const { jobId, jobTitle } = route.params;
 
@@ -18,6 +21,7 @@ export default function Applications({ route, navigation }: { navigation: any, r
             const json = await response.json();
             console.log(json)
             setData(json);
+            setIsLoading(false);
         }
         fetchJobs();
     }, []);
@@ -26,7 +30,7 @@ export default function Applications({ route, navigation }: { navigation: any, r
         <TouchableOpacity style={styles.applicationContainer} onPress={() => navigation.navigate("DetailedApplication", { application: item })}>
           <Text style={styles.applicationProperty}>Status: {item.status}</Text>
           <Text style={styles.applicationProperty}>Applicant name: {item.user.name}</Text>
-          <Text style={styles.applicationProperty}>Created at: {item.createdAt}</Text>
+          <Text style={styles.applicationProperty}>Created at: {new Date(item.createdAt).toLocaleString()}</Text>
         </TouchableOpacity>
       );
 
@@ -34,11 +38,14 @@ export default function Applications({ route, navigation }: { navigation: any, r
         <View style={styles.container}>
             <Text style={{ fontSize: 30, fontWeight: 'bold', marginBottom: 20 }}>Applications</Text>
             <Text>For job: {jobTitle}</Text>
+            {isLoading ? <CircularProgress /> : null}
             <FlatList
                 data={data}
                 renderItem={({ item }) => (renderApplication({ item }))}
                 keyExtractor={(application) => application.id}
             />
+            <br/>
+            {data.length === 0 && <Text style={styles.information}>No applications yet</Text>}
         </View>
     );
 }

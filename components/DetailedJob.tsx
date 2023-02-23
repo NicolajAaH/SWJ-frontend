@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from "react-native";
 import { Job } from '../models/Job';
@@ -7,6 +7,8 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
 
     // State holding all data.
     const [data, setData] = useState<Job>(new Job());
+
+    const [isLoading, setIsLoading] = useState(true);
 
     const { jobId } = route.params;
 
@@ -20,6 +22,7 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
             });
             const json = await response.json();
             setData(json);
+            setIsLoading(false);
         }
         fetchJobs();
     }, []);
@@ -30,15 +33,16 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
 
     return (
         <View style={styles.container}>
+            {isLoading ? <CircularProgress /> : null}
             <Text style={styles.title}>{data.title}</Text>
             <Text style={styles.information}>Company: {data.company?.name} </Text>
             <Text style={styles.information}>Description: {data.description}</Text>
             <Text style={styles.information}>Location: {data.location}</Text>
             <Text style={styles.information}>Jobtype: {data.jobType}</Text>
             <Text style={styles.information}>Salary: {data.salary} DKK/year</Text>
-            <Text style={styles.information}>Created At: {data.createdAt}</Text>
-            <Text style={styles.information}>Updated At: {data.updatedAt}</Text>
-            <Text style={styles.information}>Expires At: {data.expiresAt}</Text>
+            <Text style={styles.information}>Created At: {new Date(data.createdAt).toLocaleString()}</Text>
+            <Text style={styles.information}>Updated At: {new Date(data.updatedAt).toLocaleString()}</Text>
+            <Text style={styles.information}>Expires At: {new Date(data.expiresAt).toLocaleString()}</Text>
 
             <Button variant="contained" onClick={handleApply}>Apply</Button>    
         </View>

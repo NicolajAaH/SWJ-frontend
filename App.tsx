@@ -14,7 +14,7 @@ import DetailedApplication from './components/DetailedApplication';
 import MyApplications from './components/MyApplications';
 import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 const MyTheme = {
@@ -93,11 +93,21 @@ function headerButtons({ navigation }: { navigation: any }) {
   }, []);
 
   return (
-    <View>
+    <View style={styles.inline}>
+      <Button style={styles.button} variant="contained" onClick={() => navigation.navigate("Home")}>Home</Button>
       {isLoggedIn ? (
-        <Button variant="contained" onClick={handleLogout}>Logout</Button>) : (
-        <Button variant="contained" onClick={() => navigation.navigate("Login")}>Login</Button>
+        <Button style={styles.button} variant="contained" onClick={handleLogout}>Logout</Button>) : (
+        <Button style={styles.button} variant="contained" onClick={() => navigation.navigate("Login")}>Login</Button>
       )}
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  button: {
+    marginRight: 20,
+  },
+  inline: {
+    flexDirection: 'row',
+  }
+})
