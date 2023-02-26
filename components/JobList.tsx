@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import jwt_decode from "jwt-decode";
-import { Button, CircularProgress } from '@mui/material';
+import { Button, CircularProgress, TextField } from '@mui/material';
 
 
 export default function JobList({ navigation }: { navigation: any }) {
 
-  //TODO ADD SEARCH AND FILTER FUNCTINOALITY
+  //TODO ADD FILTER FUNCTINOALITY
 
   // State holding all data.
   const [data, setData] = useState([]);
@@ -14,6 +14,9 @@ export default function JobList({ navigation }: { navigation: any }) {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userToken'));
 
   const [isLoading, setIsLoading] = useState(true);
+
+  const [searchInput, setSearchInput] = useState('');
+
 
 
 
@@ -86,6 +89,33 @@ export default function JobList({ navigation }: { navigation: any }) {
     return false;
   }
 
+  function handleSearch() {
+    //Search
+    if(searchInput === '') { //If search input is empty, fetch all jobs
+      async function fetchJobs() {
+        const response = await fetch(`http://localhost:8080/api/bff/job`, {
+          method: 'GET',
+        });
+        const json = await response.json();
+        setData(json);
+        setIsLoading(false);
+      }
+      fetchJobs();
+    }
+    setIsLoading(true);
+    
+    console.log(searchInput);
+    async function fetchJobs() {
+      const response = await fetch(`http://localhost:8080/api/bff/job/search/${searchInput}`, {
+        method: 'GET',
+      });
+      const json = await response.json();
+      setData(json);
+      setIsLoading(false);
+    }
+    fetchJobs();
+  }
+
 
   const renderJob = ({ item }: { item: any }) => (
     <TouchableOpacity style={styles.jobContainer} onPress={() => navigation.navigate("DetailedJob", { jobId: item.id })}>
@@ -102,6 +132,13 @@ export default function JobList({ navigation }: { navigation: any }) {
       {isLoggedInAsCompany() ? (
         <Button variant="contained" onClick={handleCreateJob}>Create job</Button>) : (null
       )}
+      <View style={styles.search}>
+      <TextField id="outlined-basic" label="Search" variant="outlined" value={searchInput} onChange={(text) => setSearchInput(text.target.value)} />
+      <Text>&nbsp;&nbsp;</Text>
+      <Button variant="contained" onClick={handleSearch}>Search</Button>
+      </View>
+
+
       {isLoggedInAsCompany() ? (
         <Button variant="contained" onClick={handleMyPostedJobs}>My posted jobs</Button>) : (null
       )}
@@ -167,5 +204,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20
-  }
+  },
+  search: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+
+  },
 });

@@ -1,11 +1,13 @@
 import { Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import jwt_decode from 'jwt-decode';
 
 
 const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any }) => {
+    console.log(jwt_decode(localStorage.getItem('userToken')))
     const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState(jwt_decode(localStorage.getItem('userToken')).email);
     const [application, setApplication] = useState('');
 
     const { title, jobId } = route.params;
@@ -65,6 +67,7 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
                 value={email}
                 label="Email"
                 placeholder='Email'
+                disabled
                 onChange={(text) => setEmail(text.target.value)}
             />
             <br/>
