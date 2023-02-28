@@ -2,6 +2,7 @@ import { Button, CircularProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from "react-native";
 import { Job } from '../models/Job';
+import jwt_decode from "jwt-decode";
 
 export default function DetailedJob({ route, navigation }: { navigation: any, route: any }) {
 
@@ -31,6 +32,17 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
         navigation.navigate("Apply", {title, jobId})
     }
 
+    function isLoggedInAsCompany() {
+        if (!localStorage.getItem('userToken')) {
+          return false;
+        }
+        const decodedToken = jwt_decode(localStorage.getItem('userToken'));
+        if (decodedToken.role === 'COMPANY') {
+          return true;
+        }
+        return false;
+      }
+
     return (
         <View style={styles.container}>
             {isLoading ? <CircularProgress /> : null}
@@ -43,8 +55,7 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
             <Text style={styles.information}>Created At: {new Date(data.createdAt).toLocaleString()}</Text>
             <Text style={styles.information}>Updated At: {new Date(data.updatedAt).toLocaleString()}</Text>
             <Text style={styles.information}>Expires At: {new Date(data.expiresAt).toLocaleString()}</Text>
-
-            <Button variant="contained" onClick={handleApply}>Apply</Button>    
+            {isLoggedInAsCompany() ? null : <Button variant="contained" onClick={handleApply}>Apply</Button>}
         </View>
     );
 }

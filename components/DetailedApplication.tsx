@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from "react-native";
 import jwt_decode from "jwt-decode";
 
@@ -7,6 +7,8 @@ import jwt_decode from "jwt-decode";
 export default function DetailedApplication({ route, navigation }: { navigation: any, route: any }) {
 
     const {application}= route.params;
+
+    const [job, setJob] = useState({});
 
     function isLoggedInAsCompany() {
         if (!localStorage.getItem('userToken')) {
@@ -18,6 +20,18 @@ export default function DetailedApplication({ route, navigation }: { navigation:
         }
         return false;
       }
+
+      useEffect(() => {
+      function fetchJob(){
+        fetch(`http://localhost:8080/api/bff/job/${application.jobId}`, {
+            method: 'GET',
+        }).then(response => response.json())
+        .then(data => {
+            setJob(data);
+        });
+      }
+        fetchJob();
+    }, []);
 
     const handleAccept = async () => {
         try {
@@ -74,6 +88,8 @@ export default function DetailedApplication({ route, navigation }: { navigation:
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Application</Text>
+            <Text style={styles.information}>Job title: {job.title}</Text>
+            <Text style={styles.information}>Job location: {job.location}</Text>
             <Text style={styles.information}>Applicant name: {application.user.name}</Text>
             <Text style={styles.information}>Applicant email: {application.user.email}</Text>
             <Text style={styles.information}>Status: {application.status}</Text>

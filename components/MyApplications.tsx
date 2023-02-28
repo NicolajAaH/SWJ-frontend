@@ -1,3 +1,4 @@
+import { CircularProgress } from '@mui/material';
 import jwtDecode from 'jwt-decode';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from "react-native";
@@ -36,7 +37,6 @@ export default function MyApplications({ route, navigation }: { navigation: any,
     return (
         <View style={styles.container}>
             <Text style={{ fontSize: 30, fontWeight: 'bold', marginBottom: 20 }}>Applications</Text>
-            <Text>For job: </Text>
             {isLoading ? <CircularProgress /> : null}
 
             <FlatList
