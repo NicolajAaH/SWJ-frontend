@@ -1,6 +1,6 @@
-import { CircularProgress } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import { Application } from '../models/Application';
 
 export default function Applications({ route, navigation }: { navigation: any, route: any }) {
@@ -10,16 +10,38 @@ export default function Applications({ route, navigation }: { navigation: any, r
 
     const [isLoading, setIsLoading] = useState(true);
 
-    const { jobId, jobTitle } = route.params;
+    const { job } = route.params;
+
+    const handleMarkAsFinished = async () => {
+        setIsLoading(true);
+        job.status = "FINISHED";
+        try {
+            const response = await fetch(`http://localhost:8080/api/bff/job/${job.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(job)
+            });
+            if (!response.ok) {
+                alert('Failed to mark job as finished');
+                return;
+            }
+            setIsLoading(false);
+            navigation.navigate("MyJobs");
+        } catch (e) {
+            console.error(e);
+            job.status = "PENDING";
+        }
+    };
 
     // Fetch job list once component is mounted
     useEffect(() => {
         async function fetchJobs() {
-            const response = await fetch(`http://localhost:8080/api/bff/job/${jobId}/applications`, {
+            const response = await fetch(`http://localhost:8080/api/bff/job/${job.id}/applications`, {
                 method: 'GET',
             });
             const json = await response.json();
-            console.log(json)
             setData(json);
             setIsLoading(false);
         }
@@ -27,7 +49,9 @@ export default function Applications({ route, navigation }: { navigation: any, r
     }, []);
 
     const renderApplication = ({ item }: { item: Application }) => (
-        <TouchableOpacity style={styles.applicationContainer} onPress={() => navigation.navigate("DetailedApplication", { application: item })}>
+        <TouchableOpacity style={styles.applicationContainer} onPress={() => {
+            navigation.navigate("DetailedApplication", { application: item, job: job })
+            }}>
           <Text style={styles.applicationProperty}>Status: {item.status}</Text>
           <Text style={styles.applicationProperty}>Applicant name: {item.user.name}</Text>
           <Text style={styles.applicationProperty}>Created at: {new Date(item.createdAt).toLocaleString()}</Text>
@@ -37,7 +61,7 @@ export default function Applications({ route, navigation }: { navigation: any, r
     return (
         <View style={styles.container}>
             <Text style={{ fontSize: 30, fontWeight: 'bold', marginBottom: 20 }}>Applications</Text>
-            <Text>For job: {jobTitle}</Text>
+            <Text>For job: {job.title}</Text>
             {isLoading ? <CircularProgress /> : null}
             <FlatList
                 data={data}
@@ -46,6 +70,8 @@ export default function Applications({ route, navigation }: { navigation: any, r
             />
             <br/>
             {data.length === 0 && <Text style={styles.information}>No applications yet</Text>}
+            {job.status !== "FINISHED" && <Button variant="contained" title="Mark as finished" onClick={handleMarkAsFinished}>Mark as finished</Button>}
+            {job.status === "FINISHED" && <Text style={styles.information}>Job is finished</Text>}
         </View>
     );
 }

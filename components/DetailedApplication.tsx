@@ -6,9 +6,7 @@ import jwt_decode from "jwt-decode";
 
 export default function DetailedApplication({ route, navigation }: { navigation: any, route: any }) {
 
-    const {application}= route.params;
-
-    const [job, setJob] = useState({});
+    const {application, job}= route.params;
 
     function isLoggedInAsCompany() {
         if (!localStorage.getItem('userToken')) {
@@ -20,18 +18,6 @@ export default function DetailedApplication({ route, navigation }: { navigation:
         }
         return false;
       }
-
-      useEffect(() => {
-      function fetchJob(){
-        fetch(`http://localhost:8080/api/bff/job/${application.jobId}`, {
-            method: 'GET',
-        }).then(response => response.json())
-        .then(data => {
-            setJob(data);
-        });
-      }
-        fetchJob();
-    }, []);
 
     const handleAccept = async () => {
         try {
@@ -101,7 +87,7 @@ export default function DetailedApplication({ route, navigation }: { navigation:
 
             {isLoggedInAsCompany() ? (<View style={styles.inlineContainer}>
                 <Button variant='contained' onClick={handleAccept} color="success">Accept</Button>
-                &nbsp;&nbsp;
+                <Text>&nbsp;&nbsp;</Text>
                 <Button variant='contained' onClick={handleReject} color="error">Reject</Button>
             </View>) : (null)}
         </View>

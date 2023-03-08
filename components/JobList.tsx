@@ -6,8 +6,6 @@ import { Button, CircularProgress, FormControl, InputLabel, MenuItem, Select, Ta
 
 export default function JobList({ navigation }: { navigation: any }) {
 
-  //TODO ADD FILTER FUNCTINOALITY
-
   // State holding all data.
   const [data, setData] = useState([]);
 
@@ -28,7 +26,7 @@ export default function JobList({ navigation }: { navigation: any }) {
 
   // Fetch job list once component is mounted
   useEffect(() => {
-    const subscribe = navigation.addListener('focus', () => { //TODO slet hvis det ikke virker
+    const subscribe = navigation.addListener('focus', () => {
       async function fetchJobs() {
         const response = await fetch(`http://localhost:8080/api/bff/job`, {
           method: 'GET',

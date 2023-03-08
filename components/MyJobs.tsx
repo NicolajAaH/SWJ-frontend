@@ -26,7 +26,7 @@ export default function MyJobs({ navigation }: { navigation: any }) {
 
 
   const renderJob = ({ item }: { item: any }) => (
-    <TouchableOpacity style={styles.jobContainer} onPress={() => navigation.navigate("Applications", { jobId: item.id, jobTitle: item.title })}>
+    <TouchableOpacity style={styles.jobContainer} onPress={() => navigation.navigate("Applications", { job: item })}>
       <Text style={styles.jobTitle}>{item.title}</Text>
       <Text style={styles.jobType}>{item.jobType}</Text>
       <Text style={styles.jobLocation}>{item.location}</Text>
