@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import jwt_decode from "jwt-decode";
-import { Button, CircularProgress, FormControl, InputLabel, MenuItem, Select, Tab, TextField } from '@mui/material';
+import { Button, CircularProgress, FormControl, InputLabel, MenuItem, Pagination, Select, Tab, TextField } from '@mui/material';
+import { Job } from '../models/Job';
 
 
 export default function JobList({ navigation }: { navigation: any }) {
@@ -21,23 +22,33 @@ export default function JobList({ navigation }: { navigation: any }) {
   const [locationFilter, setLocationFilter] = useState("");
   const [salaryFilter, setSalaryFilter] = useState("");
 
+  const [numberOfPages, setNumberOfPages] = useState(0);
+
+  // Define default page number and size
+const defaultPage = 0;
+const defaultSize = 10;
+
+// Define state variables for page number, size
+const [page, setPage] = useState(defaultPage);
+const [size, setSize] = useState(defaultSize);
 
 
 
-  // Fetch job list once component is mounted
-  useEffect(() => {
-    const subscribe = navigation.addListener('focus', () => {
-      async function fetchJobs() {
-        const response = await fetch(`http://localhost:8080/api/bff/job`, {
-          method: 'GET',
-        });
-        const json = await response.json();
-        setData(json);
-        setIsLoading(false);
-      }
-      fetchJobs();
+
+  // Fetch job list based on current page and size
+useEffect(() => {
+  async function fetchJobs() {
+    setIsLoading(true);
+    const response = await fetch(`http://localhost:8080/api/bff/job?page=${page}&size=${size}`, {
+      method: 'GET',
     });
-  }, []);
+    const json = await response.json();
+    setData(json.content);
+    setNumberOfPages(json.totalPages);
+    setIsLoading(false);
+  }
+  fetchJobs();
+}, [page, size]);
 
   useEffect(() => {
     const subscribe = navigation.addListener('focus', () => {
@@ -95,27 +106,29 @@ export default function JobList({ navigation }: { navigation: any }) {
 
   function handleSearch() {
     //Search
+    setPage(0);
     setIsLoading(true);
     if (!searchInput) { //If search input is empty, fetch all jobs
       async function fetchJobs() {
-        const response = await fetch(`http://localhost:8080/api/bff/job`, {
+        const response = await fetch(`http://localhost:8080/api/bff/job?page=${page}&size=${size}`, {
           method: 'GET',
         });
         const json = await response.json();
-        setData(json);
+        setData(json.content);
+        setNumberOfPages(json.totalPages);
         setIsLoading(false);
       }
       fetchJobs();
       return;
     }
 
-    console.log(searchInput);
     async function fetchJobs() {
-      const response = await fetch(`http://localhost:8080/api/bff/job/search/${searchInput}`, {
+      const response = await fetch(`http://localhost:8080/api/bff/job/search/${searchInput}?page=${page}&size=${size}`, {
         method: 'GET',
       });
       const json = await response.json();
-      setData(json);
+      setData(json.content);
+      setNumberOfPages(json.totalPages);
       setIsLoading(false);
     }
     fetchJobs();
@@ -133,9 +146,10 @@ export default function JobList({ navigation }: { navigation: any }) {
 
   function handleFilterSubmit() {
     //Filter submits filter options
+    setPage(0);
     setIsLoading(true);
     async function fetchJobs() {
-      const response = await fetch(`http://localhost:8080/api/bff/job/filter?jobType=${jobTypeFilter}&salary=${salaryFilter}&location=${locationFilter}`, {
+      const response = await fetch(`http://localhost:8080/api/bff/job/filter?jobType=${jobTypeFilter}&salary=${salaryFilter}&location=${locationFilter}&page=${page}&size=${size}`, {
         method: 'GET',
       });
       if(response.status === 204){
@@ -143,7 +157,8 @@ export default function JobList({ navigation }: { navigation: any }) {
         setData([]);
       }else{
       const json = await response.json();
-      setData(json);
+      setNumberOfPages(json.totalPages);
+      setData(json.content);
       }
       setIsLoading(false);
     }
@@ -160,11 +175,12 @@ export default function JobList({ navigation }: { navigation: any }) {
   }
 
 
-  const renderJob = ({ item }: { item: any }) => (
+  const renderJob = ({ item }: { item: Job }) => (
     <TouchableOpacity style={styles.jobContainer} onPress={() => navigation.navigate("DetailedJob", { jobId: item.id })}>
       <Text style={styles.jobTitle}>{item.title}</Text>
       <Text style={styles.jobType}>{item.jobType}</Text>
       <Text style={styles.jobLocation}>{item.location}</Text>
+      {item.expiresAt < new Date().toISOString() && <Text style={styles.expired}>EXPIRED</Text>}
     </TouchableOpacity>
   );
 
@@ -240,6 +256,7 @@ export default function JobList({ navigation }: { navigation: any }) {
         renderItem={renderJob}
         keyExtractor={(job) => job.id}
       />
+      <Pagination count={numberOfPages} variant="outlined" showFirstButton showLastButton color="primary" onChange={(e, value) => setPage(value-1)}/> 
     </View>
   );
 }
@@ -261,6 +278,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 10,
     padding: 20,
+    marginHorizontal: 10,
     marginVertical: 10,
     shadowColor: '#000000',
     shadowOffset: {
@@ -296,6 +314,13 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-
   },
+  expired: {
+    fontSize: 14,
+    color: '#ff0000',
+    fontWeight: 'bold',
+    position: 'absolute',
+    right: 20,
+    top: 20
+  }
 });

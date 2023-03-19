@@ -27,8 +27,9 @@ export default function MyApplications({ route, navigation }: { navigation: any,
         fetchJobs();
     }, []);
 
-    const renderApplication = ({ item }: { item: Application }) => (
-        <TouchableOpacity style={styles.applicationContainer} onPress={() => navigation.navigate("DetailedApplication", { application: item })}>
+    const renderApplication = ({ item }: { item: Application }) => ( 
+        <TouchableOpacity style={styles.applicationContainer} onPress={() => navigation.navigate("DetailedApplication", { application: item, job: item.job })}>
+          <Text style={styles.applicationProperty}>Job: {item.job?.title}</Text>
           <Text style={styles.applicationProperty}>Status: {item.status}</Text>
           <Text style={styles.applicationProperty}>Created at: {new Date(item.createdAt).toLocaleString()}</Text>
         </TouchableOpacity>
@@ -87,6 +88,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 20,
         marginVertical: 10,
+        marginHorizontal: 10,
         shadowColor: '#000000',
         shadowOffset: {
           width: 1,

@@ -41,6 +41,11 @@ export default function Applications({ route, navigation }: { navigation: any, r
             const response = await fetch(`http://localhost:8080/api/bff/job/${job.id}/applications`, {
                 method: 'GET',
             });
+            if (response.status === 204) { // No content means no applications
+                setData([]);
+                setIsLoading(false);
+                return;
+            }
             const json = await response.json();
             setData(json);
             setIsLoading(false);
@@ -115,6 +120,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 20,
         marginVertical: 10,
+        marginHorizontal: 10,
         shadowColor: '#000000',
         shadowOffset: {
           width: 1,

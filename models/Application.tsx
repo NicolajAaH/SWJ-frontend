@@ -1,3 +1,4 @@
+import { Job } from "./Job";
 import { User } from "./User";
 
 export class Application {
@@ -7,6 +8,7 @@ export class Application {
     createdAt!: Date;
     updatedAt!: Date;
     jobId!: number;
+    job?: Job;
     user!: User;
     application!: string;
 }

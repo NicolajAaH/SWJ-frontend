@@ -6,9 +6,11 @@ import jwt_decode from 'jwt-decode';
 
 const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any }) => {
     console.log(jwt_decode(localStorage.getItem('userToken')))
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState(jwt_decode(localStorage.getItem('userToken')).email);
+    const decodedToken = jwt_decode(localStorage.getItem('userToken'));
+    const [name, setName] = useState(decodedToken.name);
+    const [email, setEmail] = useState(decodedToken.email);
     const [application, setApplication] = useState('');
+    const [phone, setPhone] = useState(decodedToken.phone);
 
     const { title, jobId } = route.params;
 
@@ -31,6 +33,7 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
                 setName('');
                 setEmail('');
                 setApplication('');
+                setPhone('');
             } else {
                 throw new Error('Application failed');
             }
@@ -60,6 +63,7 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
                 value={name}
                 label="Name"
                 placeholder='Name'
+                disabled
                 onChange={(text) => setName(text.target.value)}
             />
             <br/>
@@ -69,6 +73,14 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
                 placeholder='Email'
                 disabled
                 onChange={(text) => setEmail(text.target.value)}
+            />
+            <br/>
+            <TextField
+                value={phone}
+                label="Phone"
+                placeholder='Phone'
+                disabled
+                onChange={(text) => setPhone(text.target.value)}
             />
             <br/>
             <TextField

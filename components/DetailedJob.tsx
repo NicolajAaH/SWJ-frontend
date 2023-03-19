@@ -43,6 +43,15 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
         return false;
       }
 
+      function isExpired (date: Date){
+        if (date < new Date().toISOString()){
+            return <Text style={styles.information}>Expired</Text>
+        }
+        else {
+            return <Button variant="contained" onClick={handleApply}>Apply</Button>
+        }
+      }
+
     return (
         <View style={styles.container}>
             {isLoading ? <CircularProgress /> : null}
@@ -55,7 +64,7 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
             <Text style={styles.information}>Created At: {new Date(data.createdAt).toLocaleString()}</Text>
             <Text style={styles.information}>Updated At: {new Date(data.updatedAt).toLocaleString()}</Text>
             <Text style={styles.information}>Expires At: {new Date(data.expiresAt).toLocaleString()}</Text>
-            {isLoggedInAsCompany() ? null : <Button variant="contained" onClick={handleApply}>Apply</Button>}
+            {isLoggedInAsCompany() ? null : isExpired(data.expiresAt)}
         </View>
     );
 }

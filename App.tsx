@@ -15,6 +15,7 @@ import MyApplications from './components/MyApplications';
 import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import UserInformation from "./components/UserInformation";
 
 const Stack = createNativeStackNavigator();
 const MyTheme = {
@@ -66,6 +67,10 @@ export default function App() {
             title: 'My Applications',
             headerRight: () => headerButtons({ navigation }),
           })} />
+          <Stack.Screen name="UserInformation" component={UserInformation} options={({ navigation }) => ({
+            title: 'User Information',
+            headerRight: () => headerButtons({ navigation }),
+          })} />
         </Stack.Navigator>
       </NavigationContainer>
     );
@@ -99,6 +104,7 @@ function headerButtons({ navigation }: { navigation: any }) {
         <Button style={styles.button} variant="contained" onClick={handleLogout}>Logout</Button>) : (
         <Button style={styles.button} variant="contained" onClick={() => navigation.navigate("Login")}>Login</Button>
       )}
+      {isLoggedIn === true && (<Button style={styles.button} variant="contained" onClick={() => navigation.navigate("UserInformation")}>My information</Button>)}
     </View>
   )
 }

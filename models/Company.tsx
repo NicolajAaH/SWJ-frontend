@@ -4,6 +4,7 @@ export class Company {
     description!: string;
     website!: string;
     email!: string;
+    phone!: number;
     createdAt!: Date;
     updatedAt!: Date;
 }

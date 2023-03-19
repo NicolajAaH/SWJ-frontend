@@ -16,6 +16,17 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
         setWebsite('');
     }
 
+    const validateEmail = (email:string) => { // Checks if email is valid using regex
+        if(email === '' || email === undefined || email === null){
+            return false;
+        }
+        return email.match(
+          /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+      };
+      
+
+
 
     const handleSubmit = async () => {
         if (email === '' || password === '' || confirmPassword === '' || name === '' || (isEnabled && website === '')) {
@@ -24,6 +35,10 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
         }
         if (password !== confirmPassword) {
             alert('Passwords do not match');
+            return;
+        }
+        if (!validateEmail(email)) {
+            alert('Please enter a valid email');
             return;
         }
         const role = isEnabled ? 'COMPANY' : 'APPLICANT';
