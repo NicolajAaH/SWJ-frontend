@@ -71,6 +71,8 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
         fetchUser();
         if(isLoggedInAsCompany()) {
             fetchCompany();
+        }else{
+            setIsLoading(false);
         }
     }, []);
     
@@ -95,6 +97,42 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
         );
     };
 
+    const validatePassword = (password:string) => { // Checks if password is valid using regex
+        if(password === '' || password === undefined || password === null){
+            return false;
+        }
+        return password.match(
+            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$" // Minimum eight characters, at least one uppercase letter, one lowercase letter and one number
+        );
+        };
+      
+
+    const handleDeleteUser = async () => {
+        let answer = window.confirm('Are you sure you want to delete your account?');
+        if(answer === false){
+            return;
+        }
+        try {
+            const response = await fetch(`http://localhost:8080/api/bff/auth/user/${getUserId()}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                //Clear local storage
+                localStorage.removeItem('userToken');
+                alert('User deleted');
+                navigation.navigate('Login');
+            } else {
+                throw new Error('Deleting user failed');
+            }
+        } catch (e) {
+            console.error(e);
+            return false;
+        }
+    };
+
     const handleSubmit = async () => {
         if (email === '' || name === '') {
             alert('Please fill in all fields');
@@ -102,6 +140,10 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
         }
         if (!validateEmail(email)) {
             alert('Please enter a valid email');
+            return;
+        }
+        if (!validatePassword(password)) {
+            alert('Please enter a valid password');
             return;
         }
         if(phone.length > 8){
@@ -201,6 +243,10 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
             />
             <br />
             <Button variant="contained" onClick={handleSubmit}>Save</Button>
+            <br />
+            <br />
+            <br />
+            <Button variant="contained" color="error" onClick={handleDeleteUser}>Delete User</Button>
         </View>
     );
 };

@@ -10,6 +10,7 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
     const [isEnabled, setIsEnabled] = useState(false);
     const [name, setName] = useState('');
     const [website, setWebsite] = useState('');
+    const [phone, setPhone] = useState('');
 
     const toggleSwitch = () => {
         setIsEnabled(previousState => !previousState);
@@ -24,6 +25,15 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
           /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         );
       };
+
+      const validatePassword = (password:string) => { // Checks if password is valid using regex
+        if(password === '' || password === undefined || password === null){
+            return false;
+        }
+        return password.match(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/ // Minimum eight characters, at least one uppercase letter, one lowercase letter and one number
+        );
+        };
       
 
 
@@ -41,6 +51,10 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
             alert('Please enter a valid email');
             return;
         }
+        if (!validatePassword(password)) {
+            alert('Please enter a valid password');
+            return;
+        }
         const role = isEnabled ? 'COMPANY' : 'APPLICANT';
         if (isEnabled) {
             const responseCompany = await fetch(`http://localhost:8080/api/bff/companies/register`, {
@@ -48,7 +62,7 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name, email, website }),
+                body: JSON.stringify({ name, email, website, phone }),
             });
             if (!responseCompany.ok) {
                 throw new Error('Creation of company failed');
@@ -60,7 +74,7 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password, role, name }),
+                body: JSON.stringify({ email, password, role, name, phone }),
             });
 
             if (response.ok) {
@@ -71,6 +85,7 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
                 setIsEnabled(false);
                 setName('');
                 setWebsite('');
+                setPhone('');
                 navigation.navigate('Login');
             } else {
                 throw new Error('Creation of user failed');
@@ -105,6 +120,13 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
             />
                         <br/>
 
+                        <TextField
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Phone"
+                label="Phone"
+            />
+                        <br/>
             <TextField
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
