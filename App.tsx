@@ -16,11 +16,31 @@ import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import UserInformation from "./components/UserInformation";
+import CompanyDetails from "./components/CompanyDetails";
 
 const Stack = createNativeStackNavigator();
 const MyTheme = {
   colors: {
     background: 'rgb(48, 81, 119)',
+  },
+};
+
+const linking = { //TODO remove this?
+  config: {
+    screens: {
+      Home: "",
+      DetailedJob: 'detailedJob',
+      Apply: 'apply',
+      Login: 'login',
+      Register: 'register',
+      CreateJob: 'createJob',
+      MyJobs: 'myJobs',
+      Applications: 'applications',
+      DetailedApplication: 'detailedApplication',
+      MyApplications: 'myApplications',
+      UserInformation: 'userInformation',
+      CompanyDetails: 'companyDetails',
+    },
   },
 };
 
@@ -31,7 +51,7 @@ export default function App() {
     return null;
   } else {
     return (
-      <NavigationContainer >
+      <NavigationContainer linking={linking}>
         <Stack.Navigator initialRouteName='Home'>
           <Stack.Screen name="Home" component={JobList} options={({ navigation }) => ({
             title: 'Jobs',
@@ -69,6 +89,10 @@ export default function App() {
           })} />
           <Stack.Screen name="UserInformation" component={UserInformation} options={({ navigation }) => ({
             title: 'User Information',
+            headerRight: () => headerButtons({ navigation }),
+          })} />
+          <Stack.Screen name="CompanyDetails" component={CompanyDetails} options={({ navigation }) => ({
+            title: 'Company Details',
             headerRight: () => headerButtons({ navigation }),
           })} />
         </Stack.Navigator>

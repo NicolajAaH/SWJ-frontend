@@ -108,7 +108,7 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
       />
       <br />
       <Text style={styles.label}>Expires At</Text>
-      <DatePicker onChange={setExpiresAt} value={expiresAt} />
+      <DatePicker onChange={setExpiresAt} value={expiresAt} minDate={new Date()}/>
       <br />
       <Button variant="contained" onClick={handleCreateJob}>Create Job</Button>
     </View>

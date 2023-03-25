@@ -25,30 +25,30 @@ export default function JobList({ navigation }: { navigation: any }) {
   const [numberOfPages, setNumberOfPages] = useState(0);
 
   // Define default page number and size
-const defaultPage = 0;
-const defaultSize = 10;
+  const defaultPage = 0;
+  const defaultSize = 10;
 
-// Define state variables for page number, size
-const [page, setPage] = useState(defaultPage);
-const [size, setSize] = useState(defaultSize);
+  // Define state variables for page number, size
+  const [page, setPage] = useState(defaultPage);
+  const [size, setSize] = useState(defaultSize);
 
 
 
 
   // Fetch job list based on current page and size
-useEffect(() => {
-  async function fetchJobs() {
-    setIsLoading(true);
-    const response = await fetch(`http://localhost:8080/api/bff/job?page=${page}&size=${size}`, {
-      method: 'GET',
-    });
-    const json = await response.json();
-    setData(json.content);
-    setNumberOfPages(json.totalPages);
-    setIsLoading(false);
-  }
-  fetchJobs();
-}, [page, size]);
+  useEffect(() => {
+    async function fetchJobs() {
+      setIsLoading(true);
+      const response = await fetch(`http://localhost:8080/api/bff/job?page=${page}&size=${size}`, {
+        method: 'GET',
+      });
+      const json = await response.json();
+      setData(json.content);
+      setNumberOfPages(json.totalPages);
+      setIsLoading(false);
+    }
+    fetchJobs();
+  }, [page, size]);
 
   useEffect(() => {
     const subscribe = navigation.addListener('focus', () => {
@@ -152,20 +152,21 @@ useEffect(() => {
       const response = await fetch(`http://localhost:8080/api/bff/job/filter?jobType=${jobTypeFilter}&salary=${salaryFilter}&location=${locationFilter}&page=${page}&size=${size}`, {
         method: 'GET',
       });
-      if(response.status === 204){
+      if (response.status === 204) {
         console.log("No jobs found");
         setData([]);
-      }else{
-      const json = await response.json();
-      setNumberOfPages(json.totalPages);
-      setData(json.content);
+        setNumberOfPages(0);
+      } else {
+        const json = await response.json();
+        setNumberOfPages(json.totalPages);
+        setData(json.content);
       }
       setIsLoading(false);
     }
     fetchJobs();
   }
 
-  function handleReset(){
+  function handleReset() {
     //Reset filter options
     setJobTypeFilter("");
     setSearchInput("");
@@ -184,6 +185,12 @@ useEffect(() => {
     </TouchableOpacity>
   );
 
+  function isNotSignedIn() {
+    if(!localStorage.getItem('userToken')) {
+      return true;
+    }
+  }
+
   return (
     <View style={styles.container}>
       <h1 style={styles.title}>SoftwareJobs</h1>
@@ -200,8 +207,11 @@ useEffect(() => {
 
 
         {isLoggedInAsCompany() ? (
-          <Button variant="contained" onClick={handleMyPostedJobs}>My posted jobs</Button>) : (null
-        )}
+          <Button variant="contained" onClick={handleMyPostedJobs}>My posted jobs</Button>) : (null)
+        }
+
+        {isNotSignedIn() ? (
+          <Tab></Tab>) : (null)}
 
         {isLoggedInAsApplicant() ? (
           <Button variant="contained" onClick={handleMyApplictions}>My applications</Button>) : (null
@@ -256,7 +266,7 @@ useEffect(() => {
         renderItem={renderJob}
         keyExtractor={(job) => job.id}
       />
-      <Pagination count={numberOfPages} variant="outlined" showFirstButton showLastButton color="primary" onChange={(e, value) => setPage(value-1)}/> 
+      <Pagination count={numberOfPages} variant="outlined" showFirstButton showLastButton color="primary" onChange={(e, value) => setPage(value - 1)} />
     </View>
   );
 }

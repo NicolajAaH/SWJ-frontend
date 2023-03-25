@@ -71,6 +71,13 @@ export default function DetailedApplication({ route, navigation }: { navigation:
         }
     };
 
+    function isRejected() {
+        if(application.status === "REJECTED"){
+            return true;
+        }
+        return false;
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Application</Text>
@@ -86,9 +93,9 @@ export default function DetailedApplication({ route, navigation }: { navigation:
             </View>
 
             {isLoggedInAsCompany() ? (<View style={styles.inlineContainer}>
-                <Button variant='contained' onClick={handleAccept} color="success">Accept</Button>
+                <Button variant='contained' onClick={handleAccept} color="success" disabled={!isRejected()}>Accept</Button>
                 <Text>&nbsp;&nbsp;</Text>
-                <Button variant='contained' onClick={handleReject} color="error">Reject</Button>
+                <Button variant='contained' onClick={handleReject} color="error" disabled={isRejected()}>Reject</Button>
             </View>) : (null)}
         </View>
     );

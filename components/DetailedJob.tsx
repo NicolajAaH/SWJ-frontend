@@ -1,6 +1,6 @@
 import { Button, CircularProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Job } from '../models/Job';
 import jwt_decode from "jwt-decode";
 
@@ -29,42 +29,51 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
     }, []);
 
     const handleApply = () => {
-        navigation.navigate("Apply", {title, jobId})
+        navigation.navigate("Apply", { title, jobId })
+    }
+
+    const handleClickCompany = () => {
+        navigation.navigate("CompanyDetails", { companyId: data.company?.id })
     }
 
     function isLoggedInAsCompany() {
         if (!localStorage.getItem('userToken')) {
-          return false;
+            return false;
         }
         const decodedToken = jwt_decode(localStorage.getItem('userToken'));
         if (decodedToken.role === 'COMPANY') {
-          return true;
+            return true;
         }
         return false;
-      }
+    }
 
-      function isExpired (date: Date){
-        if (date < new Date().toISOString()){
+    function isExpired(date: Date) {
+        if (date < new Date().toISOString()) {
             return <Text style={styles.information}>Expired</Text>
         }
         else {
             return <Button variant="contained" onClick={handleApply}>Apply</Button>
         }
-      }
+    }
 
     return (
         <View style={styles.container}>
-            {isLoading ? <CircularProgress /> : null}
-            <Text style={styles.title}>{data.title}</Text>
-            <Text style={styles.information}>Company: {data.company?.name} </Text>
-            <Text style={styles.information}>Description: {data.description}</Text>
-            <Text style={styles.information}>Location: {data.location}</Text>
-            <Text style={styles.information}>Jobtype: {data.jobType}</Text>
-            <Text style={styles.information}>Salary: {data.salary} DKK/year</Text>
-            <Text style={styles.information}>Created At: {new Date(data.createdAt).toLocaleString()}</Text>
-            <Text style={styles.information}>Updated At: {new Date(data.updatedAt).toLocaleString()}</Text>
-            <Text style={styles.information}>Expires At: {new Date(data.expiresAt).toLocaleString()}</Text>
-            {isLoggedInAsCompany() ? null : isExpired(data.expiresAt)}
+            {isLoading ? <CircularProgress style={styles.center} /> : (
+                <View style={styles.center}>
+                    <Text style={styles.title}>{data.title}</Text>
+                    <TouchableOpacity onPress={() => handleClickCompany()}>
+                    <Text style={styles.information}>Company: {data.company?.name} </Text>
+                    </TouchableOpacity>
+                    <Text style={styles.information}>Description: {data.description}</Text>
+                    <Text style={styles.information}>Location: {data.location}</Text>
+                    <Text style={styles.information}>Jobtype: {data.jobType}</Text>
+                    <Text style={styles.information}>Salary: {data.salary} DKK/year</Text>
+                    <Text style={styles.information}>Created At: {new Date(data.createdAt).toLocaleString()}</Text>
+                    <Text style={styles.information}>Updated At: {new Date(data.updatedAt).toLocaleString()}</Text>
+                    <Text style={styles.information}>Expires At: {new Date(data.expiresAt).toLocaleString()}</Text>
+                    {isLoggedInAsCompany() ? null : isExpired(data.expiresAt)}
+                </View>
+            )}
         </View>
     );
 }
@@ -82,16 +91,23 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         alignItems: 'center'
     },
+    center: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20
+    },
     title: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: 'bold',
         marginBottom: 10,
-        color: '#333'
+        color: '#333',
+        lineHeight: 40
     },
     information: {
         fontSize: 18,
         color: '#666',
-        marginBottom: 5
+        marginBottom: 5,
+        lineHeight: 26
     },
     submitButton: {
         backgroundColor: 'blue',
