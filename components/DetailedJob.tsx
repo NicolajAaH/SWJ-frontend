@@ -1,4 +1,4 @@
-import { Button, CircularProgress } from '@mui/material';
+import { Button, CircularProgress, Link, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Job } from '../models/Job';
@@ -49,7 +49,7 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
 
     function isExpired(date: Date) {
         if (date < new Date().toISOString()) {
-            return <Text style={styles.information}>Expired</Text>
+            return <Text style={styles.expired}>Expired</Text>
         }
         else {
             return <Button variant="contained" onClick={handleApply}>Apply</Button>
@@ -61,16 +61,23 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
             {isLoading ? <CircularProgress style={styles.center} /> : (
                 <View style={styles.center}>
                     <Text style={styles.title}>{data.title}</Text>
-                    <TouchableOpacity onPress={() => handleClickCompany()}>
-                    <Text style={styles.information}>Company: {data.company?.name} </Text>
-                    </TouchableOpacity>
-                    <Text style={styles.information}>Description: {data.description}</Text>
-                    <Text style={styles.information}>Location: {data.location}</Text>
-                    <Text style={styles.information}>Jobtype: {data.jobType}</Text>
-                    <Text style={styles.information}>Salary: {data.salary} DKK/year</Text>
-                    <Text style={styles.information}>Created At: {new Date(data.createdAt).toLocaleString()}</Text>
-                    <Text style={styles.information}>Updated At: {new Date(data.updatedAt).toLocaleString()}</Text>
-                    <Text style={styles.information}>Expires At: {new Date(data.expiresAt).toLocaleString()}</Text>
+                    <View style={styles.columns}>
+                        <View>
+                            <TouchableOpacity onPress={() => handleClickCompany()}>
+                                <Text style={styles.information}><Text style={styles.bold}>Company:</Text> <Link>{data.company?.name}</Link></Text>
+                            </TouchableOpacity>
+                            <Text style={styles.information}><Text style={styles.bold}>Location:</Text> {data.location}</Text>
+                            <Text style={styles.information}><Text style={styles.bold}>Job type:</Text> {data.jobType}</Text>
+                            <Text style={styles.information}><Text style={styles.bold}>Salary:</Text> {data.salary} DKK/year</Text>
+                            <Text style={styles.information}><Text style={styles.bold}>Created At:</Text> {new Date(data.createdAt).toLocaleString()}</Text>
+                            <Text style={styles.information}><Text style={styles.bold}>Updated At:</Text> {new Date(data.updatedAt).toLocaleString()}</Text>
+                            <Text style={styles.information}><Text style={styles.bold}>Expires At:</Text> {new Date(data.expiresAt).toLocaleString()}</Text>
+                        </View>
+                        <View style={styles.description}>
+                            <Text style={styles.information}><Text style={styles.bold}>Description:</Text></Text>
+                            <TextField style={styles.information} multiline rows={7} value={data.description} />
+                        </View>
+                    </View>
                     {isLoggedInAsCompany() ? null : isExpired(data.expiresAt)}
                 </View>
             )}
@@ -89,15 +96,27 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         elevation: 5,
         marginVertical: 10,
-        alignItems: 'center'
+        alignItems: 'center',
+    },
+    description: {
+        width: '60%',
+    },
+    columns: {
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-between',
+    },
+    bold: {
+        fontWeight: 'bold',
     },
     center: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 20
+        marginTop: 20,
+        width: '70%',
     },
     title: {
-        fontSize: 28,
+        fontSize: 34,
         fontWeight: 'bold',
         marginBottom: 10,
         color: '#333',
@@ -118,5 +137,11 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         textAlign: 'center',
+    },
+    expired: {
+        color: 'red',
+        fontSize: 18,
+        textAlign: 'center',
     }
+
 });

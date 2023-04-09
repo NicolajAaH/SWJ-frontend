@@ -200,7 +200,7 @@ export default function JobList({ navigation }: { navigation: any }) {
         )}
         <View style={styles.search}>
           <Button variant="outlined" onClick={handleFilter}>Filter</Button>
-          <TextField id="outlined-basic" label="Search" variant="outlined" value={searchInput} onChange={(text) => setSearchInput(text.target.value)} />
+          <TextField style={styles.searchField} id="outlined-basic" label="Search" variant="outlined" value={searchInput} onChange={(text) => setSearchInput(text.target.value)} />
           <Text>&nbsp;&nbsp;</Text>
           <Button variant="contained" onClick={handleSearch}>Search</Button>
         </View>
@@ -332,5 +332,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 20,
     top: 20
+  },
+  searchField: {
+    width: 300
   }
 });
