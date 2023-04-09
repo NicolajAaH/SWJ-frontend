@@ -25,7 +25,7 @@ const MyTheme = {
   },
 };
 
-const linking = { //TODO remove this?
+const linking = {
   config: {
     screens: {
       Home: "",

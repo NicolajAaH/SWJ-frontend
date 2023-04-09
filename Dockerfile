@@ -10,5 +10,7 @@ COPY . .
 
 RUN yarn global add expo-cli
 
-CMD ["expo", "start", "--web"]
+RUN expo build:web
+
+CMD ["yarn", "start"]
 
