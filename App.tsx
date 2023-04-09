@@ -19,11 +19,6 @@ import UserInformation from "./components/UserInformation";
 import CompanyDetails from "./components/CompanyDetails";
 
 const Stack = createNativeStackNavigator();
-const MyTheme = {
-  colors: {
-    background: 'rgb(48, 81, 119)',
-  },
-};
 
 const linking = {
   config: {
