@@ -26,7 +26,7 @@ export default function DetailedApplication({ route, navigation }: { navigation:
                 return;
             }
             application.status = "ACCEPTED";
-            const response = await fetch(`http://localhost:8080/api/bff/application/${application.id}`, {
+            const response = await fetch(`${process.env.BFFURL}/application/${application.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ export default function DetailedApplication({ route, navigation }: { navigation:
                 return;
             }
             application.status = "REJECTED";
-            const response = await fetch(`http://localhost:8080/api/bff/application/${application.id}`, {
+            const response = await fetch(`${process.env.BFFURL}/application/${application.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

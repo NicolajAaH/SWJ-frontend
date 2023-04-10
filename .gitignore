@@ -490,3 +490,5 @@ google-services.json
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,intellij+all,macos,react,reactnative,yarn,node
 
 certificate
+
+web-build

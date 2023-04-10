@@ -28,7 +28,7 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
         const fetchUser = async () => {
             setIsLoading(true);
             try {
-                const response = await fetch(`http://localhost:8080/api/bff/auth/user/${getUserId()}`, {
+                const response = await fetch(`${process.env.BFFURL}/auth/user/${getUserId()}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
 
         const fetchCompany = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/bff/company/${getEmail()}`, {
+                const response = await fetch(`${process.env.BFFURL}/company/${getEmail()}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
             return;
         }
         try {
-            const response = await fetch(`http://localhost:8080/api/bff/auth/user/${getUserId()}`, {
+            const response = await fetch(`${process.env.BFFURL}/auth/user/${getUserId()}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -156,7 +156,7 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/api/bff/auth/user/${getUserId()}`, {
+            const response = await fetch(`${process.env.BFFURL}/auth/user/${getUserId()}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -165,7 +165,7 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
             });
 
             if (response.ok) {
-                const companyResponse = await fetch(`http://localhost:8080/api/bff/company/byEmail/${getEmail()}`, {
+                const companyResponse = await fetch(`${process.env.BFFURL}/company/byEmail/${getEmail()}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

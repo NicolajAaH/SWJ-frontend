@@ -28,7 +28,7 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
       const decodedToken = jwtDecode(localStorage.getItem('userToken'));
       const email = decodedToken.email;
 
-      const response = await fetch(`http://localhost:8080/api/bff/job/${email}`, {
+      const response = await fetch(`${process.env.BFFURL}/job/${email}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

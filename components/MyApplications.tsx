@@ -17,7 +17,7 @@ export default function MyApplications({ route, navigation }: { navigation: any,
         const decodedToken = jwtDecode(localStorage.getItem('userToken'));
         const userId = decodedToken.userId;
         async function fetchJobs() {
-            const response = await fetch(`http://localhost:8080/api/bff/applications/${userId}`, {
+            const response = await fetch(`${process.env.BFFURL}/applications/${userId}`, {
                 method: 'GET',
             });
             const json = await response.json();

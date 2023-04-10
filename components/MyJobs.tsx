@@ -14,7 +14,7 @@ export default function MyJobs({ navigation }: { navigation: any }) {
   // Fetch job list once component is mounted
   useEffect(() => {
     async function fetchJobs() {
-      const response = await fetch(`http://localhost:8080/api/bff/company/${jwt_decode(localStorage.getItem('userToken')).email}`, {
+      const response = await fetch(`${process.env.BFFURL}/company/${jwt_decode(localStorage.getItem('userToken')).email}`, {
         method: 'GET',
       });
       const json = await response.json();
