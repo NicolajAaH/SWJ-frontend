@@ -3,7 +3,7 @@ import jwtDecode from 'jwt-decode';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import { Application } from '../models/Application';
-require('dotenv').config();
+
 
 export default function MyApplications({ route, navigation }: { navigation: any, route: any }) {
 

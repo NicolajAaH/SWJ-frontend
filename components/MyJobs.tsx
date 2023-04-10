@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from "react-native";
 import jwt_decode from "jwt-decode";
 import { CircularProgress } from '@mui/material';
-require('dotenv').config();
+
 
 export default function MyJobs({ navigation }: { navigation: any }) {
 

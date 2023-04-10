@@ -3,8 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native
 import jwt_decode from "jwt-decode";
 import { Button, CircularProgress, FormControl, InputLabel, MenuItem, Pagination, Select, Tab, TextField } from '@mui/material';
 import { Job } from '../models/Job';
-require('dotenv').config();
-
 
 export default function JobList({ navigation }: { navigation: any }) {
 

@@ -1,7 +1,6 @@
 import { Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-require('dotenv').config();
 
 const Login = ({ navigation }: { navigation: any }) => {
     const [email, setEmail] = useState('');

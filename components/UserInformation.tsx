@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button, TextField, Switch, CircularProgress } from '@mui/material';
 import jwt_decode from 'jwt-decode';
-require('dotenv').config();
 
 const UpdateInformation = ({ navigation }: { navigation: any }) => {
     const [email, setEmail] = useState('');
