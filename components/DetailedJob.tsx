@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Job } from '../models/Job';
 import jwt_decode from "jwt-decode";
+require('dotenv').config();
 
 export default function DetailedJob({ route, navigation }: { navigation: any, route: any }) {
 

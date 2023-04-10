@@ -2,6 +2,7 @@ import { Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import jwt_decode from 'jwt-decode';
+require('dotenv').config();
 
 
 const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any }) => {

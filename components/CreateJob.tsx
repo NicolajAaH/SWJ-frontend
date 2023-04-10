@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import DatePicker from 'react-date-picker';
 import jwtDecode from 'jwt-decode';
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+require('dotenv').config();
 
 
 const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) => {

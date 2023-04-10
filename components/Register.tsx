@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button, TextField, Switch } from '@mui/material';
-
+require('dotenv').config();
 
 const UserRegistration = ({ navigation }: { navigation: any }) => {
     const [email, setEmail] = useState('');

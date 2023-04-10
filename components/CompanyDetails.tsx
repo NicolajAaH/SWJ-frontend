@@ -2,7 +2,7 @@ import { Button, CircularProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import { Company } from '../models/Company';
-import { Job } from '../models/Job';
+require('dotenv').config();
 
 export default function CompanyDetails({ route, navigation }: { navigation: any, route: any }) {
         // State holding all data.
