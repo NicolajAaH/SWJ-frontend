@@ -41,7 +41,7 @@ export default function JobList({ navigation }: { navigation: any }) {
       for (const key in process.env) {
         console.log(`${key}: ${process.env[key]}`);
       }
-      const response = await fetch(`http://bff-service:8080/api/bff/job?page=${page}&size=${size}`, {
+      const response = await fetch(`/api/job?page=${page}&size=${size}`, {
         method: 'GET',
       });
       const json = await response.json();
