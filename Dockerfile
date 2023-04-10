@@ -1,16 +1,37 @@
-FROM node:14
+# Base image
+FROM node:latest AS build
 
+# Set working directory
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-RUN yarn install
+# Install dependencies
+RUN npm install
 
+# Copy source code
 COPY . .
 
-RUN yarn global add expo-cli
+# Build the app
+RUN npm run build
 
-RUN expo build:web
+# Use nginx as base image
+FROM nginx:latest
 
-CMD ["yarn", "start"]
+# Copy the built app to nginx html folder
+COPY --from=build /app/build /usr/share/nginx/html
 
+# Copy nginx config file to container
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Copy self-signed SSL certificate and key
+COPY swj.crt /etc/ssl/certs/certificate.crt
+COPY swj.key /etc/ssl/private/certificate.key
+
+# Expose ports
+EXPOSE 80
+EXPOSE 443
+
+# Start nginx server
+CMD ["nginx", "-g", "daemon off;"]
