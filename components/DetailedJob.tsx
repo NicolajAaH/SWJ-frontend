@@ -58,7 +58,7 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
 
     return (
         <View style={styles.container}>
-            {isLoading ? <CircularProgress style={styles.center} /> : (
+            {isLoading ? <CircularProgress style={styles.loading} /> : (
                 <View style={styles.center}>
                     <Text style={styles.title}>{data.title}</Text>
                     <View style={styles.columns}>
@@ -114,6 +114,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 20,
         width: '70%',
+    },
+    loading: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
     },
     title: {
         fontSize: 34,
