@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native
 import jwt_decode from "jwt-decode";
 import { Button, CircularProgress, FormControl, InputLabel, MenuItem, Pagination, Select, Tab, TextField } from '@mui/material';
 import { Job } from '../models/Job';
-import { env } from '../next.conf';
 
 export default function JobList({ navigation }: { navigation: any }) {
 
@@ -39,8 +38,9 @@ export default function JobList({ navigation }: { navigation: any }) {
   useEffect(() => {
     async function fetchJobs() {
       setIsLoading(true);
-      console.log(`${env.REACT_APP_BFFURL}/job?page=${page}&size=${size}`);
-      const response = await fetch(`${env.REACT_APP_BFFURL}/job?page=${page}&size=${size}`, {
+      console.log(`${process.env.REACT_APP_BFFURL}/job?page=${page}&size=${size}`);
+      console.log(`${process.env}`)
+      const response = await fetch(`${process.env.REACT_APP_BFFURL}/job?page=${page}&size=${size}`, {
         method: 'GET',
       });
       const json = await response.json();
