@@ -1,20 +1,36 @@
+FROM node:14
+
+WORKDIR /app
+
+COPY package.json yarn.lock ./
+
+RUN yarn install
+
+COPY . .
+
+RUN yarn global add expo-cli
+
+RUN expo build:web
+
+CMD ["yarn", "start"]
+
 # Base image
 FROM node:latest AS build
 
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Copy package.json and yarn-lock
+COPY package.json yarn.lock ./
 
 # Install dependencies
-RUN npm install
+RUN yarn install
 
 # Copy source code
 COPY . .
 
 # Build the app
-RUN npm run build
+RUN yarn run build
 
 # Use nginx as base image
 FROM nginx:latest
