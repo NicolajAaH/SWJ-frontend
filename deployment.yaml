@@ -15,10 +15,8 @@ spec:
       containers:
         - name: react-native-expo
           image: nicolajh/swj-frontend
-          ports:
-            - containerPort: 19006
           env:
-            - name: BFFURL
+            - name: REACT_APP_BFFURL
               value: http://bff-service:8080/api/bff
 ---
 apiVersion: v1

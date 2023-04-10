@@ -18,7 +18,7 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
     // Fetch job list once component is mounted
     useEffect(() => {
         async function fetchJobs() {
-            const response = await fetch(`${process.env.BFFURL}/job/${jobId}`, {
+            const response = await fetch(`${process.env.REACT_APP_BFFURL}/job/${jobId}`, {
                 method: 'GET',
             });
             const json = await response.json();

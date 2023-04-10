@@ -16,7 +16,7 @@ export default function Applications({ route, navigation }: { navigation: any, r
         setIsLoading(true);
         job.status = "FINISHED";
         try {
-            const response = await fetch(`${process.env.BFFURL}/job/${job.id}`, {
+            const response = await fetch(`${process.env.REACT_APP_BFFURL}/job/${job.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ export default function Applications({ route, navigation }: { navigation: any, r
     // Fetch job list once component is mounted
     useEffect(() => {
         async function fetchJobs() {
-            const response = await fetch(`${process.env.BFFURL}/job/${job.id}/applications`, {
+            const response = await fetch(`${process.env.REACT_APP_BFFURL}/job/${job.id}/applications`, {
                 method: 'GET',
             });
             if (response.status === 204) { // No content means no applications

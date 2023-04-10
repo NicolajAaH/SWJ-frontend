@@ -57,7 +57,7 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
         }
         const role = isEnabled ? 'COMPANY' : 'APPLICANT';
         if (isEnabled) {
-            const responseCompany = await fetch(`${process.env.BFFURL}/companies/register`, {
+            const responseCompany = await fetch(`${process.env.REACT_APP_BFFURL}/companies/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
             }
         }
         try {
-            const response = await fetch(`${process.env.BFFURL}/auth/register`, {
+            const response = await fetch(`${process.env.REACT_APP_BFFURL}/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
