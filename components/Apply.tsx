@@ -20,7 +20,7 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
             return;
         }
         try {
-            const response = await fetch(`${process.env.REACT_APP_BFFURL}/job/${jobId}/apply`, {
+            const response = await fetch(`/api/job/${jobId}/apply`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

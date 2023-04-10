@@ -15,7 +15,7 @@ export default function CompanyDetails({ route, navigation }: { navigation: any,
         // Fetch company details once component is mounted
         useEffect(() => {
             async function fetchCompany() {
-                const response = await fetch(`${process.env.REACT_APP_BFFURL}/company/byId/${companyId}`, {
+                const response = await fetch(`/api/company/byId/${companyId}`, {
                     method: 'GET',
                 });
                 const json = await response.json();

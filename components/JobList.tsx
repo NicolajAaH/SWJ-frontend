@@ -41,7 +41,6 @@ export default function JobList({ navigation }: { navigation: any }) {
       for (const key in process.env) {
         console.log(`${key}: ${process.env[key]}`);
       }
-      console.log(`/api/job?page=${page}&size=${size}`);
       const response = await fetch(`/api/job?page=${page}&size=${size}`, {
         method: 'GET',
       });
@@ -113,7 +112,7 @@ export default function JobList({ navigation }: { navigation: any }) {
     setIsLoading(true);
     if (!searchInput) { //If search input is empty, fetch all jobs
       async function fetchJobs() {
-        const response = await fetch(`${process.env.REACT_APP_BFFURL}/job?page=${page}&size=${size}`, {
+        const response = await fetch(`/api/job?page=${page}&size=${size}`, {
           method: 'GET',
         });
         const json = await response.json();
@@ -126,7 +125,7 @@ export default function JobList({ navigation }: { navigation: any }) {
     }
 
     async function fetchJobs() {
-      const response = await fetch(`${process.env.REACT_APP_BFFURL}/job/search/${searchInput}?page=${page}&size=${size}`, {
+      const response = await fetch(`/api/job/search/${searchInput}?page=${page}&size=${size}`, {
         method: 'GET',
       });
       const json = await response.json();
@@ -152,7 +151,7 @@ export default function JobList({ navigation }: { navigation: any }) {
     setPage(0);
     setIsLoading(true);
     async function fetchJobs() {
-      const response = await fetch(`${process.env.REACT_APP_BFFURL}/job/filter?jobType=${jobTypeFilter}&salary=${salaryFilter}&location=${locationFilter}&page=${page}&size=${size}`, {
+      const response = await fetch(`/api/job/filter?jobType=${jobTypeFilter}&salary=${salaryFilter}&location=${locationFilter}&page=${page}&size=${size}`, {
         method: 'GET',
       });
       if (response.status === 204) {

@@ -9,7 +9,7 @@ const Login = ({ navigation }: { navigation: any }) => {
     const handleLogin = async () => {
         if(!email || !password) return alert('Please enter your email and password');
         try {
-            const response = await fetch(`${process.env.REACT_APP_BFFURL}/auth/login`, {
+            const response = await fetch(`/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
