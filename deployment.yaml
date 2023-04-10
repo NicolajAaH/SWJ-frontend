@@ -28,8 +28,8 @@ spec:
     app: react-native-expo
   ports:
     - name: react-native-expo
-      port: 80
-      targetPort: 19000
+      port: 443
+      targetPort: 443
   type: LoadBalancer
 
 
