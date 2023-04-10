@@ -20,7 +20,7 @@ RUN yarn run build
 FROM nginx:latest
 
 # Copy the built app to nginx html folder
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/web-build /usr/share/nginx/html
 
 # Copy nginx config file to container
 COPY nginx.conf /etc/nginx/nginx.conf
