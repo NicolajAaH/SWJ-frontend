@@ -38,12 +38,6 @@ export default function JobList({ navigation }: { navigation: any }) {
   useEffect(() => {
     async function fetchJobs() {
       setIsLoading(true);
-      if (jobTypeFilter !== "" || locationFilter !== "" || salaryFilter !== "") {
-        handleFilterSubmit(page);
-      }
-      if(searchInput !== "") {
-        handleSearch(page);
-      }
       const response = await fetch(`/api/job?page=${page}&size=${size}`, {
         method: 'GET',
       });
@@ -109,9 +103,9 @@ export default function JobList({ navigation }: { navigation: any }) {
     return false;
   }
 
-  function handleSearch(page: number = 0) {
+  function handleSearch() {
     //Search
-    setPage(page);
+    setPage(0);
     setIsLoading(true);
     if (!searchInput) { //If search input is empty, fetch all jobs
       async function fetchJobs() {
@@ -149,9 +143,9 @@ export default function JobList({ navigation }: { navigation: any }) {
     setShowFilter(false);
   }
 
-  function handleFilterSubmit(page: number = 0) {
+  function handleFilterSubmit() {
     //Filter submits filter options
-    setPage(page);
+    setPage(0);
     setIsLoading(true);
     async function fetchJobs() {
       const response = await fetch(`/api/job/filter?jobType=${jobTypeFilter}&salary=${salaryFilter}&location=${locationFilter}&page=${page}&size=${size}`, {
