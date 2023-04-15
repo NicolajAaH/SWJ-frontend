@@ -31,7 +31,7 @@ export default function JobList({ navigation }: { navigation: any }) {
   const [page, setPage] = useState(defaultPage);
   const [size, setSize] = useState(defaultSize);
 
-  const prefixUrl = "http://localhost:8080/api/bff/";
+  const prefixUrl = "/api/";
 
   const [filterActive, setFilterActive] = useState(false);
 
