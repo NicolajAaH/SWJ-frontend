@@ -24,30 +24,66 @@ export default function JobList({ navigation }: { navigation: any }) {
   const [numberOfPages, setNumberOfPages] = useState(0);
 
   // Define default page number and size
-  const defaultPage = 0;
+  const defaultPage = 1;
   const defaultSize = 10;
 
   // Define state variables for page number, size
   const [page, setPage] = useState(defaultPage);
   const [size, setSize] = useState(defaultSize);
 
+  const prefixUrl = "http://localhost:8080/api/bff/";
 
+  const [filterActive, setFilterActive] = useState(false);
 
+  const [searchActive, setSearchActive] = useState(false);
+
+  useEffect(() => {
+    if (locationFilter.length !== 0 || jobTypeFilter.length !== 0 || salaryFilter.length !== 0) {
+      setFilterActive(true);
+    } else {
+      setFilterActive(false);
+    }
+  }, [locationFilter, jobTypeFilter, salaryFilter]);
+
+  useEffect(() => {
+    if (searchInput.length !== 0) {
+      setSearchActive(true);
+    } else {
+      setSearchActive(false);
+    }
+  }, [searchInput]);
+
+  async function fetchJobs(url : string) {
+    setIsLoading(true);
+    console.log("Fetching jobs");
+    const response = await fetch(url, {
+      method: 'GET',
+    });
+    if (!response.ok){
+      console.log("No content");
+      setData([]);
+      setNumberOfPages(0);
+      setIsLoading(false);
+      return;
+    }
+    const json = await response.json();
+    setData(json.content);
+    setNumberOfPages(json.totalPages);
+    setIsLoading(false);
+  }
 
   // Fetch job list based on current page and size
   useEffect(() => {
-    async function fetchJobs() {
-      setIsLoading(true);
-      const response = await fetch(`/api/job?page=${page}&size=${size}`, {
-        method: 'GET',
-      });
-      const json = await response.json();
-      setData(json.content);
-      setNumberOfPages(json.totalPages);
-      setIsLoading(false);
+    if (filterActive){
+      handleFilterSubmit(page);
+      return;
     }
-    fetchJobs();
-  }, [page, size]);
+    if (searchActive) {
+      handleSearch(page);
+      return;
+    }
+    fetchJobs(`${prefixUrl}job?page=${page-1}&size=${size}`);
+  }, [page]);
 
   useEffect(() => {
     const subscribe = navigation.addListener('focus', () => {
@@ -56,113 +92,44 @@ export default function JobList({ navigation }: { navigation: any }) {
   }, []);
 
 
-
-  const handleCreateJob = async () => {
-    try {
-      navigation.navigate("CreateJob");
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const handleMyPostedJobs = async () => {
-    try {
-      navigation.navigate("MyJobs");
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const handleMyApplictions = async () => {
-    try {
-      navigation.navigate("MyApplications");
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   function isLoggedInAsCompany() {
-    if (!localStorage.getItem('userToken')) {
-      return false;
-    }
-    const decodedToken = jwt_decode(localStorage.getItem('userToken'));
-    if (decodedToken.role === 'COMPANY') {
+    if (loginType() === 'COMPANY') {
       return true;
     }
     return false;
   }
 
   function isLoggedInAsApplicant() {
-    if (!localStorage.getItem('userToken')) {
-      return false;
-    }
-    const decodedToken = jwt_decode(localStorage.getItem('userToken'));
-    if (decodedToken.role === 'APPLICANT') {
+    if (loginType() === 'APPLICANT') {
       return true;
     }
     return false;
   }
 
-  function handleSearch() {
+  function loginType(){
+    if (!localStorage.getItem('userToken')) {
+      return "";
+    }
+    const decodedToken = jwt_decode(localStorage.getItem('userToken'));
+    return decodedToken.role;
+  }
+
+  function handleSearch(pageNo : number = 1) {
     //Search
-    setPage(0);
+    setPage(pageNo);
     setIsLoading(true);
     if (!searchInput) { //If search input is empty, fetch all jobs
-      async function fetchJobs() {
-        const response = await fetch(`/api/job?page=${page}&size=${size}`, {
-          method: 'GET',
-        });
-        const json = await response.json();
-        setData(json.content);
-        setNumberOfPages(json.totalPages);
-        setIsLoading(false);
-      }
-      fetchJobs();
+      fetchJobs(`${prefixUrl}job?page=${page-1}&size=${size}`);
       return;
     }
-
-    async function fetchJobs() {
-      const response = await fetch(`/api/job/search/${searchInput}?page=${page}&size=${size}`, {
-        method: 'GET',
-      });
-      const json = await response.json();
-      setData(json.content);
-      setNumberOfPages(json.totalPages);
-      setIsLoading(false);
-    }
-    fetchJobs();
+    fetchJobs(`${prefixUrl}job/search/${searchInput}?page=${page-1}&size=${size}`);
   }
 
-  function handleFilter() {
-    //Filter opens popup with filter options
-    setShowFilter(!showFilter);
-  }
-
-  function handleFilterClose() {
-    //Filter closes popup with filter options
-    setShowFilter(false);
-  }
-
-  function handleFilterSubmit() {
+  function handleFilterSubmit(pageNo : number = 1) {
+    console.log("Filter submit");
     //Filter submits filter options
-    setPage(0);
-    setIsLoading(true);
-    async function fetchJobs() {
-      const response = await fetch(`/api/job/filter?jobType=${jobTypeFilter}&salary=${salaryFilter}&location=${locationFilter}&page=${page}&size=${size}`, {
-        method: 'GET',
-      });
-      if (response.status === 204) {
-        console.log("No jobs found");
-        setData([]);
-        setNumberOfPages(0);
-      } else {
-        const json = await response.json();
-        setNumberOfPages(json.totalPages);
-        setData(json.content);
-      }
-      setIsLoading(false);
-    }
-    fetchJobs();
+    setPage(pageNo);
+    fetchJobs(`${prefixUrl}job/filter?jobType=${jobTypeFilter}&salary=${salaryFilter}&location=${locationFilter}&page=${page-1}&size=${size}`);
   }
 
   function handleReset() {
@@ -171,6 +138,7 @@ export default function JobList({ navigation }: { navigation: any }) {
     setSearchInput("");
     setLocationFilter("");
     setSalaryFilter("");
+    setFilterActive(false);
     handleSearch();
   }
 
@@ -195,25 +163,32 @@ export default function JobList({ navigation }: { navigation: any }) {
       <h1 style={styles.title}>SoftwareJobs</h1>
       <View style={styles.inline}>
         {isLoggedInAsCompany() ? (
-          <Button variant="contained" onClick={handleCreateJob}>Create job</Button>) : (<Tab></Tab> //Tab is used to center the button
+          <Button variant="contained" onClick={() => navigation.navigate('CreateJob')}>Create job</Button>) : (<Tab></Tab> //Tab is used to center the button
         )}
         <View style={styles.search}>
-          <Button variant="outlined" onClick={handleFilter}>Filter</Button>
+          <Button variant="outlined" onClick={() => setShowFilter(!showFilter)}>Filter</Button>
           <TextField style={styles.searchField} id="outlined-basic" label="Search" variant="outlined" value={searchInput} onChange={(text) => setSearchInput(text.target.value)} />
           <Text>&nbsp;&nbsp;</Text>
-          <Button variant="contained" onClick={handleSearch}>Search</Button>
+          <Button variant="contained" onClick={() => {
+              if (page === 1) {
+                handleSearch();
+              }else{
+                setPage(1);
+              }
+              setSearchActive(true);
+            }}>Search</Button>
         </View>
 
 
         {isLoggedInAsCompany() ? (
-          <Button variant="contained" onClick={handleMyPostedJobs}>My posted jobs</Button>) : (null)
+          <Button variant="contained" onClick={() => navigation.navigate("MyJobs")}>My posted jobs</Button>) : (null)
         }
 
         {isNotSignedIn() ? (
           <Tab></Tab>) : (null)}
 
         {isLoggedInAsApplicant() ? (
-          <Button variant="contained" onClick={handleMyApplictions}>My applications</Button>) : (null
+          <Button variant="contained" onClick={() => navigation.navigate("MyApplications")}>My applications</Button>) : (null
         )}
       </View>
       {showFilter ? (
@@ -253,9 +228,16 @@ export default function JobList({ navigation }: { navigation: any }) {
               type="number"
               onChange={(text) => setSalaryFilter(text.target.value)}
             />
-            <Button variant='outlined' onClick={handleFilterClose}>Close</Button>
-            <Button variant="outlined" onClick={handleReset}>Reset</Button>
-            <Button variant="contained" onClick={handleFilterSubmit}>Filter</Button>
+            <Button variant='outlined' onClick={() => setShowFilter(false)}>Close</Button>
+            <Button variant="outlined" onClick={() => handleReset()}>Reset</Button>
+            <Button variant="contained" onClick={() => {
+              if (page === 1) {
+                  handleFilterSubmit();
+              } else{
+                setPage(1);
+              }
+              setFilterActive(true);
+              }}>Apply Filter</Button>
           </div>
         </div>
       ) : null}
@@ -265,7 +247,7 @@ export default function JobList({ navigation }: { navigation: any }) {
         renderItem={renderJob}
         keyExtractor={(job) => job.id}
       />
-      <Pagination count={numberOfPages} variant="outlined" showFirstButton showLastButton color="primary" onChange={(e, value) => setPage(value - 1)} />
+      <Pagination page={page} count={numberOfPages} variant="outlined" showFirstButton showLastButton color="primary" onChange={(e, value) => setPage(value)} />
     </View>
   );
 }
