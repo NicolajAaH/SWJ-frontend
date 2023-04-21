@@ -28,7 +28,7 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
                 body: JSON.stringify({ jobId, userId: localStorage.getItem('userToken'), "status": "PENDING", application }),
             });
             if (response.ok) {
-                navigation.navigate('Home');
+                navigation.navigate('MyApplications');
                 // Clear the form fields
                 setName('');
                 setEmail('');
@@ -49,6 +49,15 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
                 <Text style={styles.title}>{title}</Text>
                 <Text style={styles.information}>You must be logged in to apply for a job.</Text>
                 <Button onClick={() => navigation.navigate('Login')}>Login</Button>
+            </View>
+        );
+    }
+
+    if (decodedToken.role === 'COMPANY') {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.title}>{title}</Text>
+                <Text style={styles.information}>You cannot apply for a job as a company.</Text>
             </View>
         );
     }

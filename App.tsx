@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import UserInformation from "./components/UserInformation";
 import CompanyDetails from "./components/CompanyDetails";
+import jwt_decode from "jwt-decode";
 
 const Stack = createNativeStackNavigator();
 
@@ -51,45 +52,67 @@ export default function App() {
           <Stack.Screen name="Home" component={JobList} options={({ navigation }) => ({
             title: 'Jobs',
             headerRight: () => headerButtons({ navigation }),
-          })}/>
+          })} />
           <Stack.Screen name="DetailedJob" component={DetailedJob} options={({ navigation }) => ({
             title: 'Detailed Job',
             headerRight: () => headerButtons({ navigation }),
           })} />
-          <Stack.Screen name="Apply" component={Apply} options={({ navigation }) => ({
-            headerRight: () => headerButtons({ navigation }),
-          })}/>
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Register" component={Register} options={({ navigation }) => ({
-            headerRight: () => headerButtons({ navigation }),
-          })}/>
-          <Stack.Screen name="CreateJob" component={CreateJob} options={({ navigation }) => ({
-            title: 'Create Job',
-            headerRight: () => headerButtons({ navigation }),
-          })} />
-          <Stack.Screen name="MyJobs" component={MyJobs} options={({ navigation }) => ({
-            title: 'My Jobs',
-            headerRight: () => headerButtons({ navigation }),
-          })}/>
           <Stack.Screen name="Applications" component={Applications} options={({ navigation }) => ({
             headerRight: () => headerButtons({ navigation }),
-          })}/>
+          })} />
           <Stack.Screen name="DetailedApplication" component={DetailedApplication} options={({ navigation }) => ({
             title: 'Detailed Application',
-            headerRight: () => headerButtons({ navigation }),
-          })} />
-          <Stack.Screen name="MyApplications" component={MyApplications} options={({ navigation }) => ({
-            title: 'My Applications',
-            headerRight: () => headerButtons({ navigation }),
-          })} />
-          <Stack.Screen name="UserInformation" component={UserInformation} options={({ navigation }) => ({
-            title: 'User Information',
             headerRight: () => headerButtons({ navigation }),
           })} />
           <Stack.Screen name="CompanyDetails" component={CompanyDetails} options={({ navigation }) => ({
             title: 'Company Details',
             headerRight: () => headerButtons({ navigation }),
           })} />
+
+          {isSignedIn() ? ( // Already signed in
+            <>
+              <Stack.Screen name="UserInformation" component={UserInformation} options={({ navigation }) => ({
+                title: 'User Information',
+                headerRight: () => headerButtons({ navigation }),
+              })} /></>
+          ) : ( // Not signed in
+            <>
+              <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen name="Register" component={Register} options={({ navigation }) => ({
+                headerRight: () => headerButtons({ navigation }),
+              })} />
+            </>
+          )}
+
+          {isLoggedInAsApplicant() ? ( // Applicant
+            <>
+              <Stack.Screen name="MyApplications" component={MyApplications} options={({ navigation }) => ({
+                title: 'My Applications',
+                headerRight: () => headerButtons({ navigation }),
+              })} />
+              <Stack.Screen name="Apply" component={Apply} options={({ navigation }) => ({
+                headerRight: () => headerButtons({ navigation }),
+              })} />
+            </>
+          ) : ( // Not signed in or company
+            <>
+            </>
+          )}
+          {isLoggedInAsCompany() ? ( // Company
+            <>
+              <Stack.Screen name="MyJobs" component={MyJobs} options={({ navigation }) => ({
+                title: 'My Jobs',
+                headerRight: () => headerButtons({ navigation }),
+              })} />
+              <Stack.Screen name="CreateJob" component={CreateJob} options={({ navigation }) => ({
+                title: 'Create Job',
+                headerRight: () => headerButtons({ navigation }),
+              })} />
+            </>
+          ) : ( // Not signed in or applicant
+            <>
+            </>
+          )}
         </Stack.Navigator>
       </NavigationContainer>
     );
@@ -126,6 +149,35 @@ function headerButtons({ navigation }: { navigation: any }) {
       {isLoggedIn === true && (<Button style={styles.button} variant="contained" onClick={() => navigation.navigate("UserInformation")}>My information</Button>)}
     </View>
   )
+}
+
+function isLoggedInAsApplicant() {
+  if (loginType() === 'APPLICANT') {
+    return true;
+  }
+  return false;
+}
+
+function isLoggedInAsCompany() {
+  if (loginType() === 'COMPANY') {
+    return true;
+  }
+  return false;
+}
+
+function isSignedIn() {
+  if (loginType() === '') {
+    return false;
+  }
+  return true;
+}
+
+function loginType() {
+  if (!localStorage.getItem('userToken')) {
+    return "";
+  }
+  const decodedToken = jwt_decode(localStorage.getItem('userToken'));
+  return decodedToken.role;
 }
 
 const styles = StyleSheet.create({
