@@ -15,7 +15,7 @@ export default function Applications({ route, navigation }: { navigation: any, r
 
     const handleMarkAsFinished = async () => {
         setIsLoading(true);
-        job.status = "FINISHED";
+        job.expiresAt = new Date();
         try {
             const response = await fetch(`/api/job/${job.id}`, {
                 method: 'PUT',
