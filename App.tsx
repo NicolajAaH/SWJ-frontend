@@ -43,6 +43,17 @@ const linking = {
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
+  const [loginType, setLoginType] = useState(localStorage.getItem('userToken'));
+
+  useEffect(() => {
+    if (!localStorage.getItem('userToken')) {
+      setLoginType("");
+      return;
+    }
+    const decodedToken = jwt_decode(localStorage.getItem('userToken'));
+    setLoginType(decodedToken.role);
+}, [localStorage.getItem('userToken')]);
+
   if (!isLoadingComplete) {
     return null;
   } else {
@@ -69,7 +80,7 @@ export default function App() {
             headerRight: () => headerButtons({ navigation }),
           })} />
 
-          {isSignedIn() ? ( // Already signed in
+          {loginType !== '' ? ( // Already signed in
             <>
               <Stack.Screen name="UserInformation" component={UserInformation} options={({ navigation }) => ({
                 title: 'User Information',
@@ -84,7 +95,7 @@ export default function App() {
             </>
           )}
 
-          {isLoggedInAsApplicant() ? ( // Applicant
+          {loginType == 'Applicant' ? ( // Applicant
             <>
               <Stack.Screen name="MyApplications" component={MyApplications} options={({ navigation }) => ({
                 title: 'My Applications',
@@ -98,7 +109,7 @@ export default function App() {
             <>
             </>
           )}
-          {isLoggedInAsCompany() ? ( // Company
+          {loginType == 'Company' ? ( // Company
             <>
               <Stack.Screen name="MyJobs" component={MyJobs} options={({ navigation }) => ({
                 title: 'My Jobs',
@@ -149,35 +160,6 @@ function headerButtons({ navigation }: { navigation: any }) {
       {isLoggedIn === true && (<Button style={styles.button} variant="contained" onClick={() => navigation.navigate("UserInformation")}>My information</Button>)}
     </View>
   )
-}
-
-function isLoggedInAsApplicant() {
-  if (loginType() === 'APPLICANT') {
-    return true;
-  }
-  return false;
-}
-
-function isLoggedInAsCompany() {
-  if (loginType() === 'COMPANY') {
-    return true;
-  }
-  return false;
-}
-
-function isSignedIn() {
-  if (loginType() === '') {
-    return false;
-  }
-  return true;
-}
-
-function loginType() {
-  if (!localStorage.getItem('userToken')) {
-    return "";
-  }
-  const decodedToken = jwt_decode(localStorage.getItem('userToken'));
-  return decodedToken.role;
 }
 
 const styles = StyleSheet.create({
