@@ -2,6 +2,7 @@ import { Button, CircularProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import { Application } from '../models/Application';
+import jwt_decode from "jwt-decode";
 
 
 export default function Applications({ route, navigation }: { navigation: any, route: any }) {
@@ -38,6 +39,16 @@ export default function Applications({ route, navigation }: { navigation: any, r
 
     // Fetch job list once component is mounted
     useEffect(() => {
+        if (localStorage.getItem('userToken') === null || jwt_decode(localStorage.getItem('userToken')).role !== 'COMPANY') {
+            navigation.navigate('Home');
+            return;
+        }
+
+        if(job.company.id !== jwt_decode(localStorage.getItem('userToken')).userId) {
+            console.warn("User is not the owner of the job");
+            navigation.navigate('Home');
+            return;
+        }
         async function fetchJobs() {
             const response = await fetch(`/api/job/${job.id}/applications`, {
                 method: 'GET',

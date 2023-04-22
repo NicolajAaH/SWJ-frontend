@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import DatePicker from 'react-date-picker';
 import jwtDecode from 'jwt-decode';
@@ -13,6 +13,13 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
   const [salary, setSalary] = useState('');
   const [expiresAt, setExpiresAt] = useState(new Date());
 
+  useEffect(() => {
+    const decodedToken = jwtDecode(localStorage.getItem('userToken'));
+    if (decodedToken.role !== 'COMPANY') {
+        navigation.navigate('Home');
+        return;
+    }
+  }, []);
 
   const handleCreateJob = async () => {
     try {

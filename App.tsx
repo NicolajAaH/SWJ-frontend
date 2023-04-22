@@ -17,7 +17,6 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import UserInformation from "./components/UserInformation";
 import CompanyDetails from "./components/CompanyDetails";
-import jwt_decode from "jwt-decode";
 
 const Stack = createNativeStackNavigator();
 
@@ -43,16 +42,6 @@ const linking = {
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
-  const [loginType, setLoginType] = useState(localStorage.getItem('userToken'));
-
-  useEffect(() => {
-    if (!localStorage.getItem('userToken')) {
-      setLoginType("");
-      return;
-    }
-    const decodedToken = jwt_decode(localStorage.getItem('userToken'));
-    setLoginType(decodedToken.role);
-}, [localStorage.getItem('userToken')]);
 
   if (!isLoadingComplete) {
     return null;
@@ -79,51 +68,29 @@ export default function App() {
             title: 'Company Details',
             headerRight: () => headerButtons({ navigation }),
           })} />
-
-          {loginType !== '' ? ( // Already signed in
-            <>
-              <Stack.Screen name="UserInformation" component={UserInformation} options={({ navigation }) => ({
-                title: 'User Information',
-                headerRight: () => headerButtons({ navigation }),
-              })} /></>
-          ) : ( // Not signed in
-            <>
-              <Stack.Screen name="Login" component={Login} />
-              <Stack.Screen name="Register" component={Register} options={({ navigation }) => ({
-                headerRight: () => headerButtons({ navigation }),
-              })} />
-            </>
-          )}
-
-          {loginType == 'Applicant' ? ( // Applicant
-            <>
-              <Stack.Screen name="MyApplications" component={MyApplications} options={({ navigation }) => ({
-                title: 'My Applications',
-                headerRight: () => headerButtons({ navigation }),
-              })} />
-              <Stack.Screen name="Apply" component={Apply} options={({ navigation }) => ({
-                headerRight: () => headerButtons({ navigation }),
-              })} />
-            </>
-          ) : ( // Not signed in or company
-            <>
-            </>
-          )}
-          {loginType == 'Company' ? ( // Company
-            <>
-              <Stack.Screen name="MyJobs" component={MyJobs} options={({ navigation }) => ({
-                title: 'My Jobs',
-                headerRight: () => headerButtons({ navigation }),
-              })} />
-              <Stack.Screen name="CreateJob" component={CreateJob} options={({ navigation }) => ({
-                title: 'Create Job',
-                headerRight: () => headerButtons({ navigation }),
-              })} />
-            </>
-          ) : ( // Not signed in or applicant
-            <>
-            </>
-          )}
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Register" component={Register} options={({ navigation }) => ({
+            headerRight: () => headerButtons({ navigation }),
+          })} />
+          <Stack.Screen name="UserInformation" component={UserInformation} options={({ navigation }) => ({
+            title: 'User Information',
+            headerRight: () => headerButtons({ navigation }),
+          })} />
+          <Stack.Screen name="MyApplications" component={MyApplications} options={({ navigation }) => ({
+            title: 'My Applications',
+            headerRight: () => headerButtons({ navigation }),
+          })} />
+          <Stack.Screen name="Apply" component={Apply} options={({ navigation }) => ({
+            headerRight: () => headerButtons({ navigation }),
+          })} />
+          <Stack.Screen name="MyJobs" component={MyJobs} options={({ navigation }) => ({
+            title: 'My Jobs',
+            headerRight: () => headerButtons({ navigation }),
+          })} />
+          <Stack.Screen name="CreateJob" component={CreateJob} options={({ navigation }) => ({
+            title: 'Create Job',
+            headerRight: () => headerButtons({ navigation }),
+          })} />
         </Stack.Navigator>
       </NavigationContainer>
     );

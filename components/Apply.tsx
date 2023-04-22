@@ -1,11 +1,10 @@
 import { Button, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import jwt_decode from 'jwt-decode';
 
 
 const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any }) => {
-    console.log(jwt_decode(localStorage.getItem('userToken')))
     const decodedToken = jwt_decode(localStorage.getItem('userToken'));
     const [name, setName] = useState(decodedToken.name);
     const [email, setEmail] = useState(decodedToken.email);
@@ -43,24 +42,17 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
         }
     };
 
-    if (localStorage.getItem('userToken') === null) {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.title}>{title}</Text>
-                <Text style={styles.information}>You must be logged in to apply for a job.</Text>
-                <Button onClick={() => navigation.navigate('Login')}>Login</Button>
-            </View>
-        );
-    }
-
-    if (decodedToken.role === 'COMPANY') {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.title}>{title}</Text>
-                <Text style={styles.information}>You cannot apply for a job as a company.</Text>
-            </View>
-        );
-    }
+    useEffect(() => {
+        if (localStorage.getItem('userToken') === null) {
+            navigation.navigate('Login');
+            return;
+        }
+        if (decodedToken.role === 'COMPANY'){
+            alert('You cannot apply for a job as a company.')
+            navigation.navigate('Home');
+            return;
+        }
+    }, []);
 
     return (
         <View style={styles.container}>
