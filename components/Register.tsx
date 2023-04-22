@@ -87,6 +87,7 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
                 setPhone('');
                 navigation.navigate('Login');
             } else {
+                alert('Registration failed - email might be in use');
                 throw new Error('Creation of user failed');
             }
         } catch (e) {

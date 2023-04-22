@@ -34,7 +34,7 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
                 setApplication('');
                 setPhone('');
             } else {
-                throw new Error('Application failed');
+                throw new Error('Application failed - are you applying for an expired job?');
             }
         } catch (e) {
             console.error(e);
