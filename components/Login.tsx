@@ -1,10 +1,19 @@
 import { Button, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 const Login = ({ navigation }: { navigation: any }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    useEffect(() => {
+        const token = localStorage.getItem('userToken');
+        if (token) {
+            console.warn('Already logged in')
+            navigation.navigate('Home');
+            return;
+        }
+    }, []);
 
     const handleLogin = async () => {
         if(!email || !password) return alert('Please enter your email and password');

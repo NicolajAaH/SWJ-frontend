@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from "react-native";
 import jwt_decode from "jwt-decode";
 import { CircularProgress } from '@mui/material';
+import jwtDecode from 'jwt-decode';
 
 
 export default function MyJobs({ navigation }: { navigation: any }) {
@@ -14,6 +15,12 @@ export default function MyJobs({ navigation }: { navigation: any }) {
 
   // Fetch job list once component is mounted
   useEffect(() => {
+    const decodedToken = jwtDecode(localStorage.getItem('userToken'));
+    if (decodedToken.role !== 'COMPANY') {
+        navigation.navigate('Home');
+        return;
+    }
+    
     async function fetchJobs() {
       const response = await fetch(`/api/company/${jwt_decode(localStorage.getItem('userToken')).email}`, {
         method: 'GET',

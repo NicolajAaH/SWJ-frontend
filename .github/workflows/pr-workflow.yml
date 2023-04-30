@@ -27,14 +27,10 @@ jobs:
           password: ${{ env.DOCKER_HUB_PASSWORD }}
 
       - name: Write key
-        env:
-          AUTH: ${{ secrets.AUTH }}
         run: |
           echo "${{ secrets.CERTIFICATE_KEY }}" | base64 --decode > swj.key
 
       - name: Write certificate
-        env:
-          AUTH: ${{ secrets.AUTH }}
         run: |
           echo "${{ secrets.CERTIFICATE }}" | base64 --decode > swj.crt
 

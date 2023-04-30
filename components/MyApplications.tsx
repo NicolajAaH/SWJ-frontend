@@ -3,6 +3,7 @@ import jwtDecode from 'jwt-decode';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import { Application } from '../models/Application';
+import jwt_decode from "jwt-decode";
 
 
 export default function MyApplications({ route, navigation }: { navigation: any, route: any }) {
@@ -16,6 +17,10 @@ export default function MyApplications({ route, navigation }: { navigation: any,
     // Fetch job list once component is mounted
     useEffect(() => {
         const decodedToken = jwtDecode(localStorage.getItem('userToken'));
+        if (decodedToken.role !== 'APPLICANT') {
+            navigation.navigate('Home');
+            return;
+        }
         const userId = decodedToken.userId;
         async function fetchJobs() {
             const response = await fetch(`/api/applications/${userId}`, {

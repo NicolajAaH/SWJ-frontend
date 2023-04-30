@@ -1,11 +1,10 @@
 import { Button, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import jwt_decode from 'jwt-decode';
 
 
 const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any }) => {
-    console.log(jwt_decode(localStorage.getItem('userToken')))
     const decodedToken = jwt_decode(localStorage.getItem('userToken'));
     const [name, setName] = useState(decodedToken.name);
     const [email, setEmail] = useState(decodedToken.email);
@@ -28,14 +27,14 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
                 body: JSON.stringify({ jobId, userId: localStorage.getItem('userToken'), "status": "PENDING", application }),
             });
             if (response.ok) {
-                navigation.navigate('Home');
+                navigation.navigate('MyApplications');
                 // Clear the form fields
                 setName('');
                 setEmail('');
                 setApplication('');
                 setPhone('');
             } else {
-                throw new Error('Application failed');
+                throw new Error('Application failed - are you applying for an expired job?');
             }
         } catch (e) {
             console.error(e);
@@ -43,15 +42,17 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
         }
     };
 
-    if (localStorage.getItem('userToken') === null) {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.title}>{title}</Text>
-                <Text style={styles.information}>You must be logged in to apply for a job.</Text>
-                <Button onClick={() => navigation.navigate('Login')}>Login</Button>
-            </View>
-        );
-    }
+    useEffect(() => {
+        if (localStorage.getItem('userToken') === null) {
+            navigation.navigate('Login');
+            return;
+        }
+        if (decodedToken.role === 'COMPANY'){
+            alert('You cannot apply for a job as a company.')
+            navigation.navigate('Home');
+            return;
+        }
+    }, []);
 
     return (
         <View style={styles.container}>

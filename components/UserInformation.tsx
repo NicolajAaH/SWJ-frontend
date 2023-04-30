@@ -25,6 +25,12 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
     }
 
     useEffect (() => {
+        console.warn('Not logged in')
+        const token = localStorage.getItem('userToken');
+        if (!token) {
+            navigation.navigate('Home');
+            return;
+        }
         const fetchUser = async () => {
             setIsLoading(true);
             try {

@@ -42,6 +42,7 @@ const linking = {
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
+
   if (!isLoadingComplete) {
     return null;
   } else {
@@ -51,43 +52,43 @@ export default function App() {
           <Stack.Screen name="Home" component={JobList} options={({ navigation }) => ({
             title: 'Jobs',
             headerRight: () => headerButtons({ navigation }),
-          })}/>
+          })} />
           <Stack.Screen name="DetailedJob" component={DetailedJob} options={({ navigation }) => ({
             title: 'Detailed Job',
             headerRight: () => headerButtons({ navigation }),
           })} />
-          <Stack.Screen name="Apply" component={Apply} options={({ navigation }) => ({
-            headerRight: () => headerButtons({ navigation }),
-          })}/>
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Register" component={Register} options={({ navigation }) => ({
-            headerRight: () => headerButtons({ navigation }),
-          })}/>
-          <Stack.Screen name="CreateJob" component={CreateJob} options={({ navigation }) => ({
-            title: 'Create Job',
-            headerRight: () => headerButtons({ navigation }),
-          })} />
-          <Stack.Screen name="MyJobs" component={MyJobs} options={({ navigation }) => ({
-            title: 'My Jobs',
-            headerRight: () => headerButtons({ navigation }),
-          })}/>
           <Stack.Screen name="Applications" component={Applications} options={({ navigation }) => ({
             headerRight: () => headerButtons({ navigation }),
-          })}/>
+          })} />
           <Stack.Screen name="DetailedApplication" component={DetailedApplication} options={({ navigation }) => ({
             title: 'Detailed Application',
             headerRight: () => headerButtons({ navigation }),
           })} />
-          <Stack.Screen name="MyApplications" component={MyApplications} options={({ navigation }) => ({
-            title: 'My Applications',
+          <Stack.Screen name="CompanyDetails" component={CompanyDetails} options={({ navigation }) => ({
+            title: 'Company Details',
+            headerRight: () => headerButtons({ navigation }),
+          })} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Register" component={Register} options={({ navigation }) => ({
             headerRight: () => headerButtons({ navigation }),
           })} />
           <Stack.Screen name="UserInformation" component={UserInformation} options={({ navigation }) => ({
             title: 'User Information',
             headerRight: () => headerButtons({ navigation }),
           })} />
-          <Stack.Screen name="CompanyDetails" component={CompanyDetails} options={({ navigation }) => ({
-            title: 'Company Details',
+          <Stack.Screen name="MyApplications" component={MyApplications} options={({ navigation }) => ({
+            title: 'My Applications',
+            headerRight: () => headerButtons({ navigation }),
+          })} />
+          <Stack.Screen name="Apply" component={Apply} options={({ navigation }) => ({
+            headerRight: () => headerButtons({ navigation }),
+          })} />
+          <Stack.Screen name="MyJobs" component={MyJobs} options={({ navigation }) => ({
+            title: 'My Jobs',
+            headerRight: () => headerButtons({ navigation }),
+          })} />
+          <Stack.Screen name="CreateJob" component={CreateJob} options={({ navigation }) => ({
+            title: 'Create Job',
             headerRight: () => headerButtons({ navigation }),
           })} />
         </Stack.Navigator>

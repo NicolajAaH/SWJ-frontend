@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button, TextField, Switch } from '@mui/material';
 
@@ -87,6 +87,7 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
                 setPhone('');
                 navigation.navigate('Login');
             } else {
+                alert('Registration failed - email might be in use');
                 throw new Error('Creation of user failed');
             }
         } catch (e) {
@@ -94,6 +95,15 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
             return false;
         }
     };
+
+    useEffect(() => {
+        console.warn('Already logged in')
+        const token = localStorage.getItem('userToken');
+        if (token) {
+            navigation.navigate('Home');
+            return;
+        }
+    }, []);
 
     return (
         <View style={styles.container}>
