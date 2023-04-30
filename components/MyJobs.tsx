@@ -24,6 +24,10 @@ export default function MyJobs({ navigation }: { navigation: any }) {
     async function fetchJobs() {
       const response = await fetch(`/api/company/${jwt_decode(localStorage.getItem('userToken')).email}`, {
         method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem("userToken")}`
+        }
       });
       const json = await response.json();
       setData(json);

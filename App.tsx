@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import UserInformation from "./components/UserInformation";
 import CompanyDetails from "./components/CompanyDetails";
+import jwt_decode from "jwt-decode";
 
 const Stack = createNativeStackNavigator();
 
@@ -113,7 +114,19 @@ function headerButtons({ navigation }: { navigation: any }) {
 
   useEffect(() => {
     const subscribe = navigation.addListener('focus', () => {
-      setIsLoggedIn(!!localStorage.getItem('userToken'));
+      const token = localStorage.getItem('userToken');
+      if (token) {
+        const decodedToken = jwt_decode(token);
+        const currentTime = Date.now() / 1000; // convert to seconds
+        if (decodedToken.exp < currentTime) {
+          // JWT has expired, prompt user to log in again
+          localStorage.removeItem('userToken');
+        } else{
+          setIsLoggedIn(true);
+        }
+      } else {
+        setIsLoggedIn(false);
+      }
     });
   }, []);
 

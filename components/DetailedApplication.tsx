@@ -29,6 +29,7 @@ export default function DetailedApplication({ route, navigation }: { navigation:
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("userToken")}`
                 },
                 body: JSON.stringify(application),
             });
@@ -55,6 +56,7 @@ export default function DetailedApplication({ route, navigation }: { navigation:
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("userToken")}`
                 },
                 body: JSON.stringify(application),
             });

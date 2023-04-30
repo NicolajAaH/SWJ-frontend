@@ -22,6 +22,7 @@ export default function Applications({ route, navigation }: { navigation: any, r
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("userToken")}`
                 },
                 body: JSON.stringify(job)
             });
@@ -52,6 +53,10 @@ export default function Applications({ route, navigation }: { navigation: any, r
         async function fetchJobs() {
             const response = await fetch(`/api/job/${job.id}/applications`, {
                 method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("userToken")}`
+                }
             });
             if (response.status === 204) { // No content means no applications
                 setData([]);
