@@ -48,7 +48,6 @@ export default function Applications({ route, navigation }: { navigation: any, r
             const response = await fetch(`/api/job/${job.id}/applications`, {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem("userToken")}`
                 }
             });
