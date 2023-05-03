@@ -38,6 +38,7 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem("userToken")}`
                     },
                 });
                 if (response.ok) {
@@ -60,6 +61,7 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem("userToken")}`
                     },
                 });
                 if (response.ok) {

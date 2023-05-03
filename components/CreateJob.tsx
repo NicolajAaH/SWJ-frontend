@@ -39,6 +39,7 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem("userToken")}`
         },
         body: JSON.stringify({ title, location, description, jobType, salary, expiresAt }),
       });

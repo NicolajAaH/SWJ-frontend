@@ -17,6 +17,10 @@ export default function CompanyDetails({ route, navigation }: { navigation: any,
             async function fetchCompany() {
                 const response = await fetch(`/api/company/byId/${companyId}`, {
                     method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem("userToken")}`
+                    }
                 });
                 const json = await response.json();
                 setData(json);

@@ -22,6 +22,7 @@ export default function Applications({ route, navigation }: { navigation: any, r
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("userToken")}`
                 },
                 body: JSON.stringify(job)
             });
@@ -43,15 +44,12 @@ export default function Applications({ route, navigation }: { navigation: any, r
             navigation.navigate('Home');
             return;
         }
-
-        if(job.company.id !== jwt_decode(localStorage.getItem('userToken')).userId) {
-            console.warn("User is not the owner of the job");
-            navigation.navigate('Home');
-            return;
-        }
-        async function fetchJobs() {
+        async function fetchApplications() {
             const response = await fetch(`/api/job/${job.id}/applications`, {
                 method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("userToken")}`
+                }
             });
             if (response.status === 204) { // No content means no applications
                 setData([]);
@@ -62,7 +60,7 @@ export default function Applications({ route, navigation }: { navigation: any, r
             setData(json);
             setIsLoading(false);
         }
-        fetchJobs();
+        fetchApplications();
     }, []);
 
     const renderApplication = ({ item }: { item: Application }) => (

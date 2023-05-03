@@ -25,6 +25,10 @@ export default function MyApplications({ route, navigation }: { navigation: any,
         async function fetchJobs() {
             const response = await fetch(`/api/applications/${userId}`, {
                 method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("userToken")}`
+                },
             });
             const json = await response.json();
             setData(json);
