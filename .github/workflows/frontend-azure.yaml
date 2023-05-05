@@ -26,6 +26,12 @@ jobs:
                 client-id: ${{ secrets.AZURE_CLIENT_ID }}
                 subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
                 tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+            - name: Write key
+              run: |
+                  echo "${{ secrets.CERTIFICATE_KEY }}" | base64 --decode > swj.key
+            - name: Write certificate
+              run: |
+                  echo "${{ secrets.CERTIFICATE }}" | base64 --decode > swj.crt
             - name: Build and push image to ACR
               run: az acr build --image ${{ env.CONTAINER_NAME }}:${{ github.sha }} --registry ${{ env.AZURE_CONTAINER_REGISTRY }} -g ${{ env.ACR_RESOURCE_GROUP }} -f ./Dockerfile ./
     deploy:
