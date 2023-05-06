@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import 'react-date-picker/dist/DatePicker.css';
-import 'react-calendar/dist/Calendar.css';
-import DatePicker from 'react-date-picker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import jwtDecode from 'jwt-decode';
+import dayjs from 'dayjs';
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 
 
@@ -13,13 +14,13 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
   const [location, setLocation] = useState('');
   const [jobType, setJobType] = useState('');
   const [salary, setSalary] = useState('');
-  const [expiresAt, setExpiresAt] = useState(new Date());
+  const [expiresAt, setExpiresAt] = useState(dayjs());
 
   useEffect(() => {
     const decodedToken = jwtDecode(localStorage.getItem('userToken'));
     if (decodedToken.role !== 'COMPANY') {
-        navigation.navigate('Home');
-        return;
+      navigation.navigate('Home');
+      return;
     }
   }, []);
 
@@ -29,7 +30,7 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
         alert('Please fill in all fields');
         return;
       }
-      if(salary < 0) {
+      if (salary < 0) {
         alert('Salary must be a positive number');
         return;
       }
@@ -53,7 +54,7 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
         setLocation('');
         setJobType('');
         setSalary('');
-        setExpiresAt(new Date());
+        setExpiresAt(dayjs());
         navigation.navigate('Home');
       } else {
         throw new Error('Application failed');
@@ -89,25 +90,25 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
       />
       <br />
       <FormControl>
-      <InputLabel id="job-type-label">Job Type</InputLabel>
-      <Select
-    labelId="job-type-label"
-    id="job-type-select"
-    value={jobType}
-    label="JobType"
-    style={{ width: 200 }}
-    onChange={(text) => setJobType(text.target.value)}
-  >
-    <MenuItem value={'FRONTEND'}>Frontend</MenuItem>
-    <MenuItem value={'BACKEND'}>Backend</MenuItem>
-    <MenuItem value={'ARCHITECT'}>Architect</MenuItem>
-    <MenuItem value={'DEVOPS'}>DevOps</MenuItem>
-    <MenuItem value={'FULLSTACK'}>Fullstack</MenuItem>
-    <MenuItem value={'QA'}>QA</MenuItem>
-    <MenuItem value={'MANAGER'}>Manager</MenuItem>
-    <MenuItem value={'OTHER'}>Other</MenuItem>
-  </Select>
-  </FormControl>
+        <InputLabel id="job-type-label">Job Type</InputLabel>
+        <Select
+          labelId="job-type-label"
+          id="job-type-select"
+          value={jobType}
+          label="JobType"
+          style={{ width: 200 }}
+          onChange={(text) => setJobType(text.target.value)}
+        >
+          <MenuItem value={'FRONTEND'}>Frontend</MenuItem>
+          <MenuItem value={'BACKEND'}>Backend</MenuItem>
+          <MenuItem value={'ARCHITECT'}>Architect</MenuItem>
+          <MenuItem value={'DEVOPS'}>DevOps</MenuItem>
+          <MenuItem value={'FULLSTACK'}>Fullstack</MenuItem>
+          <MenuItem value={'QA'}>QA</MenuItem>
+          <MenuItem value={'MANAGER'}>Manager</MenuItem>
+          <MenuItem value={'OTHER'}>Other</MenuItem>
+        </Select>
+      </FormControl>
       <br />
       <TextField
         value={salary}
@@ -118,7 +119,9 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
       />
       <br />
       <Text style={styles.label}>Expires At</Text>
-      <DatePicker onChange={setExpiresAt} value={expiresAt} minDate={new Date()}/>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker format='DD/MM/YYYY' onChange={(newDate) => setExpiresAt(newDate)} value={expiresAt} minDate={dayjs()} />
+      </LocalizationProvider>
       <br />
       <Button variant="contained" onClick={handleCreateJob}>Create Job</Button>
     </View>
