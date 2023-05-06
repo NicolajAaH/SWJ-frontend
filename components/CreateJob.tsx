@@ -67,64 +67,71 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
 
   return (
     <View style={styles.container}>
-      <h1>Create Job</h1>
-      <TextField
-        value={title}
-        placeholder="Title"
-        label="Title"
-        onChange={(text) => setTitle(text.target.value)}
-      />
-      <br />
-      <TextField
-        multiline 
-        rows={7}
-        value={description}
-        placeholder="Description"
-        label="Description"
-        onChange={(text) => setDescription(text.target.value)}
-      />
-      <br />
-      <TextField
-        value={location}
-        placeholder="Location"
-        label="Location"
-        onChange={(text) => setLocation(text.target.value)}
-      />
-      <br />
-      <FormControl>
-        <InputLabel id="job-type-label">Job Type</InputLabel>
-        <Select
-          labelId="job-type-label"
-          id="job-type-select"
-          value={jobType}
-          label="JobType"
-          style={{ width: 200 }}
-          onChange={(text) => setJobType(text.target.value)}
-        >
-          <MenuItem value={'FRONTEND'}>Frontend</MenuItem>
-          <MenuItem value={'BACKEND'}>Backend</MenuItem>
-          <MenuItem value={'ARCHITECT'}>Architect</MenuItem>
-          <MenuItem value={'DEVOPS'}>DevOps</MenuItem>
-          <MenuItem value={'FULLSTACK'}>Fullstack</MenuItem>
-          <MenuItem value={'QA'}>QA</MenuItem>
-          <MenuItem value={'MANAGER'}>Manager</MenuItem>
-          <MenuItem value={'OTHER'}>Other</MenuItem>
-        </Select>
-      </FormControl>
-      <br />
-      <TextField
-        value={salary}
-        placeholder="Salary (DKK/year)"
-        label="Salary (DKK/year)"
-        type="number"
-        onChange={(text) => setSalary(text.target.value)}
-      />
-      <br />
-      <Text style={styles.label}>Expires At</Text>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker format='DD/MM/YYYY' onChange={(newDate) => setExpiresAt(newDate)} value={expiresAt} minDate={dayjs()} />
-      </LocalizationProvider>
-      <br />
+      <View style={styles.center}>
+        <h1>Create Job</h1>
+        <View style={styles.columns}>
+          <View>
+            <TextField
+              value={title}
+              placeholder="Title"
+              label="Title"
+              onChange={(text) => setTitle(text.target.value)}
+            />
+            <br />
+            <TextField
+              value={location}
+              placeholder="Location"
+              label="Location"
+              onChange={(text) => setLocation(text.target.value)}
+            />
+            <br />
+            <FormControl>
+              <InputLabel id="job-type-label">Job Type</InputLabel>
+              <Select
+                labelId="job-type-label"
+                id="job-type-select"
+                value={jobType}
+                label="JobType"
+                style={{ width: 200 }}
+                onChange={(text) => setJobType(text.target.value)}
+              >
+                <MenuItem value={'FRONTEND'}>Frontend</MenuItem>
+                <MenuItem value={'BACKEND'}>Backend</MenuItem>
+                <MenuItem value={'ARCHITECT'}>Architect</MenuItem>
+                <MenuItem value={'DEVOPS'}>DevOps</MenuItem>
+                <MenuItem value={'FULLSTACK'}>Fullstack</MenuItem>
+                <MenuItem value={'QA'}>QA</MenuItem>
+                <MenuItem value={'MANAGER'}>Manager</MenuItem>
+                <MenuItem value={'OTHER'}>Other</MenuItem>
+              </Select>
+            </FormControl>
+            <br />
+            <TextField
+              value={salary}
+              placeholder="Salary (DKK/year)"
+              label="Salary (DKK/year)"
+              type="number"
+              onChange={(text) => setSalary(text.target.value)}
+            />
+            <br />
+            <Text style={styles.label}>Expires At</Text>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker format='DD/MM/YYYY' onChange={(newDate) => setExpiresAt(newDate)} value={expiresAt} minDate={dayjs()} />
+            </LocalizationProvider>
+            <br />
+          </View>
+          <View style={styles.description}>
+            <TextField
+              multiline
+              rows={7}
+              value={description}
+              placeholder="Description"
+              label="Description"
+              onChange={(text) => setDescription(text.target.value)}
+            />
+          </View>
+        </View>
+      </View>
       <Button variant="contained" onClick={handleCreateJob}>Create Job</Button>
     </View>
   );
@@ -132,11 +139,19 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 20,
     backgroundColor: '#fff',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 5,
+    marginVertical: 10,
     alignItems: 'center',
-    justifyContent: 'center',
+  },
+  description: {
+    width: '60%',
   },
   label: {
     fontWeight: 'bold',
@@ -158,7 +173,18 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
-  }
+  },
+  columns: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+  },
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    width: '70%',
+  },
 });
 export default CreateJobPage;
 
