@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import 'react-date-picker/dist/DatePicker.css';
-import 'react-calendar/dist/Calendar.css';
+import '../styles/DatePicker.css'
 import DatePicker from 'react-date-picker';
 import jwtDecode from 'jwt-decode';
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
@@ -118,7 +117,7 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
       />
       <br />
       <Text style={styles.label}>Expires At</Text>
-      <DatePicker style="react-date-picker/dist/DatePicker.css" onChange={setExpiresAt} value={expiresAt} minDate={new Date()}/>
+      <DatePicker onChange={setExpiresAt} value={expiresAt} minDate={new Date()}/>
       <br />
       <Button variant="contained" onClick={handleCreateJob}>Create Job</Button>
     </View>
