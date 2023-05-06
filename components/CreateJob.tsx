@@ -76,6 +76,8 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
       />
       <br />
       <TextField
+        multiline 
+        rows={7}
         value={description}
         placeholder="Description"
         label="Description"
