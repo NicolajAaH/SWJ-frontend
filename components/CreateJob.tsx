@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import '../styles/DatePicker.css'
-import '../styles/Calendar.css'
-import DatePicker from 'react-date-picker';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import jwtDecode from 'jwt-decode';
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 

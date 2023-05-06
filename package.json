@@ -38,6 +38,7 @@
     "react": "18.1.0",
     "react-calendar": "^4.2.1",
     "react-date-picker": "^10.0.3",
+    "react-datepicker": "^4.11.0",
     "react-dom": "18.1.0",
     "react-native": "0.70.5",
     "react-native-paper": "^5.1.4",
@@ -48,6 +49,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@types/react": "~18.0.24",
+    "@types/react-datepicker": "^4.11.2",
     "@types/react-native": "~0.70.6",
     "jest": "^26.6.3",
     "jest-expo": "~47.0.1",
