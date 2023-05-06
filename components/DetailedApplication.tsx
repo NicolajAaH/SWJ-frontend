@@ -79,6 +79,13 @@ export default function DetailedApplication({ route, navigation }: { navigation:
         return false;
     }
 
+    function isAccepted() { //Two function are created as application can be PENDING, ACCEPTED, or REJECTED
+        if(application.status === "ACCEPTED"){
+            return true;
+        }
+        return false;
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Application</Text>
@@ -94,7 +101,7 @@ export default function DetailedApplication({ route, navigation }: { navigation:
             </View>
 
             {isLoggedInAsCompany() ? (<View style={styles.inlineContainer}>
-                <Button variant='contained' onClick={handleAccept} color="success" disabled={!isRejected()}>Accept</Button>
+                <Button variant='contained' onClick={handleAccept} color="success" disabled={isAccepted()}>Accept</Button>
                 <Text>&nbsp;&nbsp;</Text>
                 <Button variant='contained' onClick={handleReject} color="error" disabled={isRejected()}>Reject</Button>
             </View>) : (null)}
