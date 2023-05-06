@@ -93,6 +93,7 @@ export default function DetailedApplication({ route, navigation }: { navigation:
             <Text style={styles.information}>Job location: {job.location}</Text>
             <Text style={styles.information}>Applicant name: {application.user.name}</Text>
             <Text style={styles.information}>Applicant email: {application.user.email}</Text>
+            <Text style={styles.information}>Applicant phone: {application.user.phone}</Text>
             <Text style={styles.information}>Status: {application.status}</Text>
             <Text style={styles.information}>Created at: {new Date(application.createdAt).toLocaleString()}</Text>
             <Text style={styles.information}>Application:</Text>
