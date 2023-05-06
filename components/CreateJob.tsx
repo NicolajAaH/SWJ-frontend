@@ -47,7 +47,6 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
         body: JSON.stringify({ title, location, description, jobType, salary, expiresAt }),
       });
       if (response.ok) {
-        navigation.navigate('Home');
         // Clear the form fields
         setTitle('');
         setDescription('');
@@ -55,7 +54,7 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
         setJobType('');
         setSalary('');
         setExpiresAt(dayjs());
-        navigation.navigate('Home');
+        alert('Job created');
       } else {
         throw new Error('Application failed');
       }
