@@ -34,6 +34,10 @@ const CreateJobPage = ({ route, navigation }: { navigation: any, route: any }) =
         alert('Salary must be a positive number');
         return;
       }
+      if (title.trim.length === 0 || description.trim.length === 0 || location.trim.length === 0) { //Whitespace
+        alert('Please fill in all fields');
+        return;
+      }
 
       const decodedToken = jwtDecode(localStorage.getItem('userToken'));
       const email = decodedToken.email;

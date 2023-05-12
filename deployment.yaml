@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: react-native-expo-deployment
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: react-native-expo
@@ -31,6 +31,28 @@ spec:
       port: 443
       targetPort: 443
   type: LoadBalancer
-
-
-
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-frontend
+spec:
+  maxReplicas: 3
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: react-native-expo
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 80
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80

@@ -16,11 +16,11 @@ export default function MyJobs({ navigation }: { navigation: any }) {
   // Fetch job list once component is mounted
   useEffect(() => {
     const decodedToken = jwtDecode(localStorage.getItem('userToken'));
-    if (decodedToken.role !== 'COMPANY') {
-        navigation.navigate('Home');
-        return;
+    if (decodedToken.role !== 'COMPANY') { // Only companies can see their jobs
+      navigation.navigate('Home');
+      return;
     }
-    
+
     async function fetchJobs() {
       const response = await fetch(`/api/company/${jwt_decode(localStorage.getItem('userToken')).email}`, {
         method: 'GET',

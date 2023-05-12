@@ -40,7 +40,7 @@ export default function Applications({ route, navigation }: { navigation: any, r
 
     // Fetch job list once component is mounted
     useEffect(() => {
-        if (localStorage.getItem('userToken') === null || jwt_decode(localStorage.getItem('userToken')).role !== 'COMPANY') {
+        if (localStorage.getItem('userToken') === null || jwt_decode(localStorage.getItem('userToken')).role !== 'COMPANY') { // Redirect to home if not logged in or not a company
             navigation.navigate('Home');
             return;
         }
@@ -66,12 +66,12 @@ export default function Applications({ route, navigation }: { navigation: any, r
     const renderApplication = ({ item }: { item: Application }) => (
         <TouchableOpacity style={styles.applicationContainer} onPress={() => {
             navigation.navigate("DetailedApplication", { application: item, job: job })
-            }}>
-          <Text style={styles.applicationProperty}>Status: {item.status}</Text>
-          <Text style={styles.applicationProperty}>Applicant name: {item.user.name}</Text>
-          <Text style={styles.applicationProperty}>Created at: {new Date(item.createdAt).toLocaleString()}</Text>
+        }}>
+            <Text style={styles.applicationProperty}>Status: {item.status}</Text>
+            <Text style={styles.applicationProperty}>Applicant name: {item.user.name}</Text>
+            <Text style={styles.applicationProperty}>Created at: {new Date(item.createdAt).toLocaleString()}</Text>
         </TouchableOpacity>
-      );
+    );
 
     return (
         <View style={styles.container}>
@@ -83,7 +83,7 @@ export default function Applications({ route, navigation }: { navigation: any, r
                 renderItem={({ item }) => (renderApplication({ item }))}
                 keyExtractor={(application) => application.id}
             />
-            <br/>
+            <br />
             {data.length === 0 && <Text style={styles.information}>No applications yet</Text>}
             {job.status !== "FINISHED" && <Button variant="contained" title="Mark as finished" onClick={handleMarkAsFinished}>Mark as finished</Button>}
             {job.status === "FINISHED" && <Text style={styles.information}>Job is finished</Text>}
@@ -133,16 +133,16 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         shadowColor: '#000000',
         shadowOffset: {
-          width: 1,
-          height: 1
+            width: 1,
+            height: 1
         },
         shadowRadius: 6,
         shadowOpacity: 1,
         elevation: 8
-      },
-      applicationProperty: {
+    },
+    applicationProperty: {
         fontSize: 14,
         color: '#666666',
         marginBottom: 5
-      },
+    },
 });

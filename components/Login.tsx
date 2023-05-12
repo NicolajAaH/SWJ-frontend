@@ -16,7 +16,8 @@ const Login = ({ navigation }: { navigation: any }) => {
     }, []);
 
     const handleLogin = async () => {
-        if(!email || !password) return alert('Please enter your email and password');
+        if (!email || !password) return alert('Please enter your email and password');
+        if (email.trim.length === 0 || password.trim.length === 0) return alert('Please enter your email and password');
         try {
             const response = await fetch(`/api/auth/login`, {
                 method: 'POST',
@@ -53,7 +54,7 @@ const Login = ({ navigation }: { navigation: any }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
             />
-            <br/>
+            <br />
             <TextField
                 variant='outlined'
                 type="password"
@@ -63,9 +64,9 @@ const Login = ({ navigation }: { navigation: any }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-                        <br/>
+            <br />
             <Button variant="contained" onClick={handleLogin}>Login</Button>
-            <br/>
+            <br />
             <Button variant="contained" onClick={handleRegister}>Register</Button>
         </View>
     );

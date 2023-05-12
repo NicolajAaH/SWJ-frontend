@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button, TextField, Switch, CircularProgress } from '@mui/material';
 import jwt_decode from 'jwt-decode';
+import { validateEmail, validatePassword } from './Validator';
 
 const UpdateInformation = ({ navigation }: { navigation: any }) => {
     const [email, setEmail] = useState('');
@@ -19,15 +20,15 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
         return decodedToken.userId;
     }
 
-    function getEmail () {
+    function getEmail() {
         const decodedToken = jwt_decode(localStorage.getItem('userToken'));
         return decodedToken.email;
     }
 
-    useEffect (() => {
+    useEffect(() => {
         console.warn('Not logged in')
         const token = localStorage.getItem('userToken');
-        if (!token) {
+        if (!token) { // if not logged in
             navigation.navigate('Home');
             return;
         }
@@ -77,47 +78,28 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
             setIsLoading(false);
         };
         fetchUser();
-        if(isLoggedInAsCompany()) {
+        if (isLoggedInAsCompany()) { // If logged in as company, fetch company information
             fetchCompany();
-        }else{
+        } else {
             setIsLoading(false);
         }
     }, []);
-    
+
 
     function isLoggedInAsCompany() {
         if (!localStorage.getItem('userToken')) {
-          return false;
+            return false;
         }
         const decodedToken = jwt_decode(localStorage.getItem('userToken'));
         if (decodedToken.role === 'COMPANY') {
-          return true;
+            return true;
         }
         return false;
-      }
-
-    const validateEmail = (email: string) => { // Checks if email is valid using regex
-        if (email === '' || email === undefined || email === null) {
-            return false;
-        }
-        return email.match(
-            /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        );
-    };
-
-    const validatePassword = (password:string) => { // Checks if password is valid using regex
-        if(password === '' || password === undefined || password === null){
-            return false;
-        }
-        return password.match(
-            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$" // Minimum eight characters, at least one uppercase letter, one lowercase letter and one number
-        );
-        };
-      
+    }
 
     const handleDeleteUser = async () => {
         let answer = window.confirm('Are you sure you want to delete your account?');
-        if(answer === false){
+        if (answer === false) {
             return;
         }
         try {
@@ -154,12 +136,16 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
             alert('Please enter a valid password');
             return;
         }
-        if(phone.length > 8){
+        if (phone.length !== 8) {
             alert('Phone can only be 8 digits');
             return;
         }
         if (password !== confirmPassword || password === '') {
             alert('Passwords do not match or is empty');
+            return;
+        }
+        if (name.trim.length === 0 || (isLoggedInAsCompany() && website.trim.length === 0)) {
+            alert('Please enter a valid name and website');
             return;
         }
 
