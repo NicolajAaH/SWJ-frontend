@@ -35,7 +35,7 @@ export default function DetailedApplication({ route, navigation }: { navigation:
             });
             if (response.ok) {
                 alert('Application accepted');
-                navigation.navigate('Home');
+                navigation.goBack();
             } else {
                 alert('Failed to accept application');
             }
@@ -62,7 +62,7 @@ export default function DetailedApplication({ route, navigation }: { navigation:
             });
             if (response.ok) {
                 alert('Application rejected');
-                navigation.navigate('Home');
+                navigation.goBack();
             } else {
                 alert('Failed to reject application');
             }
