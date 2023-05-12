@@ -29,6 +29,11 @@ export default function DetailedJob({ route, navigation }: { navigation: any, ro
     }, []);
 
     const handleApply = () => {
+        if(!localStorage.getItem('userToken')){
+            alert("You must be logged in to apply for a job");
+            navigation.navigate("Login");
+            return;
+        }
         navigation.navigate("Apply", { title, jobId })
     }
 
