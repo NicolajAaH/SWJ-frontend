@@ -5,22 +5,22 @@ import jwt_decode from "jwt-decode";
 
 export default function DetailedApplication({ route, navigation }: { navigation: any, route: any }) {
 
-    const {application, job}= route.params;
+    const { application, job } = route.params;
 
     function isLoggedInAsCompany() {
         if (!localStorage.getItem('userToken')) {
-          return false;
+            return false;
         }
         const decodedToken = jwt_decode(localStorage.getItem('userToken'));
         if (decodedToken.role === 'COMPANY') {
-          return true;
+            return true;
         }
         return false;
-      }
+    }
 
     const handleAccept = async () => {
         try {
-            if(application.status === "ACCEPTED"){
+            if (isAccepted()) {
                 alert("Application already accepted");
                 return;
             }
@@ -47,7 +47,7 @@ export default function DetailedApplication({ route, navigation }: { navigation:
 
     const handleReject = async () => {
         try {
-            if(application.status === "REJECTED"){
+            if (isRejected()) {
                 alert("Application already rejected");
                 return;
             }
@@ -73,14 +73,14 @@ export default function DetailedApplication({ route, navigation }: { navigation:
     };
 
     function isRejected() {
-        if(application.status === "REJECTED"){
+        if (application.status === "REJECTED") {
             return true;
         }
         return false;
     }
 
     function isAccepted() { //Two function are created as application can be PENDING, ACCEPTED, or REJECTED
-        if(application.status === "ACCEPTED"){
+        if (application.status === "ACCEPTED") {
             return true;
         }
         return false;
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'red',
         padding: 10,
         margin: 20,
-    
+
     },
     submitButtonText: {
         color: 'white',

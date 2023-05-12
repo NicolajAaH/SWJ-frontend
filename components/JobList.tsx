@@ -53,13 +53,13 @@ export default function JobList({ navigation }: { navigation: any }) {
     }
   }, [searchInput]);
 
-  async function fetchJobs(url : string) {
+  async function fetchJobs(url: string) {
     setIsLoading(true);
     console.log("Fetching jobs");
     const response = await fetch(url, {
       method: 'GET',
     });
-    if (!response.ok){
+    if (!response.ok) {
       console.log("No content");
       setData([]);
       setNumberOfPages(0);
@@ -74,7 +74,7 @@ export default function JobList({ navigation }: { navigation: any }) {
 
   // Fetch job list based on current page and size
   useEffect(() => {
-    if (filterActive){
+    if (filterActive) {
       handleFilterSubmit(page);
       return;
     }
@@ -82,7 +82,7 @@ export default function JobList({ navigation }: { navigation: any }) {
       handleSearch(page);
       return;
     }
-    fetchJobs(`${prefixUrl}job?page=${page-1}&size=${size}`);
+    fetchJobs(`${prefixUrl}job?page=${page - 1}&size=${size}`);
   }, [page]);
 
   useEffect(() => {
@@ -106,7 +106,7 @@ export default function JobList({ navigation }: { navigation: any }) {
     return false;
   }
 
-  function loginType(){
+  function loginType() { //Returns the role of the logged in user
     if (!localStorage.getItem('userToken')) {
       return "";
     }
@@ -114,22 +114,21 @@ export default function JobList({ navigation }: { navigation: any }) {
     return decodedToken.role;
   }
 
-  function handleSearch(pageNo : number = 1) {
+  function handleSearch(pageNo: number = 1) {
     //Search
     setPage(pageNo);
     setIsLoading(true);
     if (!searchInput) { //If search input is empty, fetch all jobs
-      fetchJobs(`${prefixUrl}job?page=${page-1}&size=${size}`);
+      fetchJobs(`${prefixUrl}job?page=${page - 1}&size=${size}`);
       return;
     }
-    fetchJobs(`${prefixUrl}job/search/${searchInput}?page=${page-1}&size=${size}`);
+    fetchJobs(`${prefixUrl}job/search/${searchInput}?page=${page - 1}&size=${size}`);
   }
 
-  function handleFilterSubmit(pageNo : number = 1) {
-    console.log("Filter submit");
+  function handleFilterSubmit(pageNo: number = 1) {
     //Filter submits filter options
     setPage(pageNo);
-    fetchJobs(`${prefixUrl}job/filter?jobType=${jobTypeFilter}&salary=${salaryFilter}&location=${locationFilter}&page=${page-1}&size=${size}`);
+    fetchJobs(`${prefixUrl}job/filter?jobType=${jobTypeFilter}&salary=${salaryFilter}&location=${locationFilter}&page=${page - 1}&size=${size}`);
   }
 
   function handleReset() {
@@ -153,7 +152,7 @@ export default function JobList({ navigation }: { navigation: any }) {
   );
 
   function isNotSignedIn() {
-    if(!localStorage.getItem('userToken')) {
+    if (!localStorage.getItem('userToken')) {
       return true;
     }
   }
@@ -170,13 +169,13 @@ export default function JobList({ navigation }: { navigation: any }) {
           <TextField style={styles.searchField} id="outlined-basic" label="Search" variant="outlined" value={searchInput} onChange={(text) => setSearchInput(text.target.value)} />
           <Text>&nbsp;&nbsp;</Text>
           <Button variant="contained" onClick={() => {
-              if (page === 1) {
-                handleSearch();
-              }else{
-                setPage(1);
-              }
-              setSearchActive(true);
-            }}>Search</Button>
+            if (page === 1) { //If page is already 1 then just search
+              handleSearch();
+            } else {
+              setPage(1); //Will trigger useEffect to fetch jobs
+            }
+            setSearchActive(true);
+          }}>Search</Button>
         </View>
 
 
@@ -231,13 +230,13 @@ export default function JobList({ navigation }: { navigation: any }) {
             <Button variant='outlined' onClick={() => setShowFilter(false)}>Close</Button>
             <Button variant="outlined" onClick={() => handleReset()}>Reset</Button>
             <Button variant="contained" onClick={() => {
-              if (page === 1) {
-                  handleFilterSubmit();
-              } else{
-                setPage(1);
+              if (page === 1) { //If page is already 1 then just filter
+                handleFilterSubmit();
+              } else {
+                setPage(1); //Will trigger useEffect to fetch jobs
               }
               setFilterActive(true);
-              }}>Apply Filter</Button>
+            }}>Apply Filter</Button>
           </div>
         </div>
       ) : null}

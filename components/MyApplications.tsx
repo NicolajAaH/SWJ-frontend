@@ -17,7 +17,7 @@ export default function MyApplications({ route, navigation }: { navigation: any,
     // Fetch job list once component is mounted
     useEffect(() => {
         const decodedToken = jwtDecode(localStorage.getItem('userToken'));
-        if (decodedToken.role !== 'APPLICANT') {
+        if (decodedToken.role !== 'APPLICANT') { // Only applicants can see their applications
             navigation.navigate('Home');
             return;
         }
@@ -37,13 +37,13 @@ export default function MyApplications({ route, navigation }: { navigation: any,
         fetchJobs();
     }, []);
 
-    const renderApplication = ({ item }: { item: Application }) => ( 
+    const renderApplication = ({ item }: { item: Application }) => (
         <TouchableOpacity style={styles.applicationContainer} onPress={() => navigation.navigate("DetailedApplication", { application: item, job: item.job })}>
-          <Text style={styles.applicationProperty}>Job: {item.job?.title}</Text>
-          <Text style={styles.applicationProperty}>Status: {item.status}</Text>
-          <Text style={styles.applicationProperty}>Created at: {new Date(item.createdAt).toLocaleString()}</Text>
+            <Text style={styles.applicationProperty}>Job: {item.job?.title}</Text>
+            <Text style={styles.applicationProperty}>Status: {item.status}</Text>
+            <Text style={styles.applicationProperty}>Created at: {new Date(item.createdAt).toLocaleString()}</Text>
         </TouchableOpacity>
-      );
+    );
 
     return (
         <View style={styles.container}>
@@ -101,16 +101,16 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         shadowColor: '#000000',
         shadowOffset: {
-          width: 1,
-          height: 1
+            width: 1,
+            height: 1
         },
         shadowRadius: 6,
         shadowOpacity: 1,
         elevation: 8
-      },
-      applicationProperty: {
+    },
+    applicationProperty: {
         fontSize: 14,
         color: '#666666',
         marginBottom: 5
-      },
+    },
 });

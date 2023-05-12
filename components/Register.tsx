@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button, TextField, Switch } from '@mui/material';
+import { validateEmail, validatePassword } from './Validator';
 
 const UserRegistration = ({ navigation }: { navigation: any }) => {
     const [email, setEmail] = useState('');
@@ -16,24 +17,8 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
         setWebsite('');
     }
 
-    const validateEmail = (email:string) => { // Checks if email is valid using regex
-        if(email === '' || email === undefined || email === null){
-            return false;
-        }
-        return email.match(
-          /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        );
-      };
 
-      const validatePassword = (password:string) => { // Checks if password is valid using regex
-        if(password === '' || password === undefined || password === null){
-            return false;
-        }
-        return password.match(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/ // Minimum eight characters, at least one uppercase letter, one lowercase letter and one number
-        );
-        };
-      
+
 
 
 
@@ -54,8 +39,17 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
             alert('Please enter a valid password');
             return;
         }
+        if (name.trim.length === 0 || (isEnabled && website.trim.length === 0)) {
+            alert('Please enter a valid name and website');
+            return;
+        }
+        if (phone.length !== 8) {
+            alert('Phone can only be 8 digits');
+            return;
+        }
+
         const role = isEnabled ? 'COMPANY' : 'APPLICANT';
-        if (isEnabled) {
+        if (isEnabled) { //Register company first
             const responseCompany = await fetch(`/api/companies/register`, {
                 method: 'POST',
                 headers: {
@@ -119,7 +113,7 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
                 placeholder="Name"
                 label="Name"
             />
-            <br/>
+            <br />
 
             <TextField
                 value={email}
@@ -127,15 +121,15 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
                 placeholder="Email"
                 label="Email"
             />
-                        <br/>
+            <br />
 
-                        <TextField
+            <TextField
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Phone"
                 label="Phone"
             />
-                        <br/>
+            <br />
             <TextField
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -143,7 +137,7 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
                 type="password"
                 label="Password"
             />
-                        <br/>
+            <br />
 
             <TextField
                 value={confirmPassword}
@@ -152,7 +146,7 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
                 type="password"
                 label="Confirm Password"
             />
-                        <br/>
+            <br />
 
             {isEnabled ? (
                 <TextField
@@ -163,7 +157,7 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
                 />) : (
                 <Text></Text>
             )}
-            <br/>
+            <br />
             <Button variant="contained" onClick={handleSubmit}>Submit</Button>
         </View>
     );

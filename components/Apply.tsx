@@ -48,7 +48,7 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
             navigation.navigate('Login');
             return;
         }
-        if (decodedToken.role === 'COMPANY'){
+        if (decodedToken.role === 'COMPANY') {
             alert('You cannot apply for a job as a company.')
             navigation.navigate('Home');
             return;
@@ -60,7 +60,7 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
             <Text style={styles.title}>{title}</Text>
 
             <Text style={styles.label}>Apply for job</Text>
-            <br/>
+            <br />
             <TextField
                 value={name}
                 label="Name"
@@ -68,7 +68,7 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
                 disabled
                 onChange={(text) => setName(text.target.value)}
             />
-            <br/>
+            <br />
             <TextField
                 value={email}
                 label="Email"
@@ -76,7 +76,7 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
                 disabled
                 onChange={(text) => setEmail(text.target.value)}
             />
-            <br/>
+            <br />
             <TextField
                 value={phone}
                 label="Phone"
@@ -84,7 +84,7 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
                 disabled
                 onChange={(text) => setPhone(text.target.value)}
             />
-            <br/>
+            <br />
             <TextField
                 value={application}
                 label="Application"
@@ -93,7 +93,7 @@ const ApplyForJobPage = ({ route, navigation }: { navigation: any, route: any })
                 multiline
                 rows={10}
             />
-            <br/>
+            <br />
             <Button variant="contained" onClick={handleSubmit}>Submit</Button>
         </View>
     );
