@@ -30,6 +30,12 @@ export default function MyApplications({ route, navigation }: { navigation: any,
                     'Authorization': `Bearer ${localStorage.getItem("userToken")}`
                 },
             });
+            if (response.status === 204){
+                // No applications found
+                setData([]);
+                setIsLoading(false);
+                return;
+            }
             const json = await response.json();
             setData(json);
             setIsLoading(false);
