@@ -167,6 +167,8 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
                     } else {
                         throw new Error('Updating company information failed');
                     }
+                }else{
+                    alert('User information updated');
                 }
             } else {
                 throw new Error('Updating user information failed');
