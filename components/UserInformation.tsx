@@ -153,18 +153,20 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
             });
 
             if (response.ok) {
-                const companyResponse = await fetch(`/api/company/byEmail/${getEmail()}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem("userToken")}`
-                    },
-                    body: JSON.stringify({ website, email, phone, name }),
-                });
-                if (companyResponse.ok) {
-                    alert('User information updated');
-                } else {
-                    throw new Error('Updating company information failed');
+                if (isLoggedInAsCompany()) {
+                    const companyResponse = await fetch(`/api/company/byEmail/${getEmail()}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem("userToken")}`
+                        },
+                        body: JSON.stringify({ website, email, phone, name }),
+                    });
+                    if (companyResponse.ok) {
+                        alert('User information updated');
+                    } else {
+                        throw new Error('Updating company information failed');
+                    }
                 }
             } else {
                 throw new Error('Updating user information failed');
