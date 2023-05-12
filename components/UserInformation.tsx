@@ -107,6 +107,7 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("userToken")}`
                 },
             });
             if (response.ok) {
@@ -124,7 +125,7 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
     };
 
     const handleSubmit = async () => {
-        if (email === '' || name === '') {
+        if (email === '' || name === '' || phone === '') {
             alert('Please fill in all fields');
             return;
         }
@@ -134,10 +135,6 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
         }
         if (!validatePassword(password)) {
             alert('Please enter a valid password');
-            return;
-        }
-        if (phone.length !== 8) {
-            alert('Phone can only be 8 digits');
             return;
         }
         if (password !== confirmPassword || password === '') {
@@ -150,22 +147,28 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("userToken")}`
                 },
                 body: JSON.stringify({ email, name, password, phone }),
             });
 
             if (response.ok) {
-                const companyResponse = await fetch(`/api/company/byEmail/${getEmail()}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ website, email, phone, name }),
-                });
-                if (companyResponse.ok) {
+                if (isLoggedInAsCompany()) {
+                    const companyResponse = await fetch(`/api/company/byEmail/${getEmail()}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem("userToken")}`
+                        },
+                        body: JSON.stringify({ website, email, phone, name }),
+                    });
+                    if (companyResponse.ok) {
+                        alert('User information updated');
+                    } else {
+                        throw new Error('Updating company information failed');
+                    }
+                }else{
                     alert('User information updated');
-                } else {
-                    throw new Error('Updating company information failed');
                 }
             } else {
                 throw new Error('Updating user information failed');
