@@ -1,6 +1,6 @@
 
 export function validateEmail(email: string) { // Checks if email is valid using regex
-    if (email === undefined || email === null || email.trim.length === 0) {
+    if (email === undefined || email === null || email === '') {
         return false;
     }
     return email.match(
@@ -9,7 +9,7 @@ export function validateEmail(email: string) { // Checks if email is valid using
 };
 
 export function validatePassword(password: string) { // Checks if password is valid using regex
-    if (password === undefined || password === null || password.trim.length === 0) {
+    if (password === undefined || password === null || password === '') {
         return false;
     }
     return password.match(

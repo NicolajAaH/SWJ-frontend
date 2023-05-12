@@ -144,10 +144,6 @@ const UpdateInformation = ({ navigation }: { navigation: any }) => {
             alert('Passwords do not match or is empty');
             return;
         }
-        if (name.trim.length === 0 || (isLoggedInAsCompany() && website.trim.length === 0)) {
-            alert('Please enter a valid name and website');
-            return;
-        }
 
         try {
             const response = await fetch(`/api/auth/user/${getUserId()}`, {

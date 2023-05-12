@@ -17,11 +17,6 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
         setWebsite('');
     }
 
-
-
-
-
-
     const handleSubmit = async () => {
         if (email === '' || password === '' || confirmPassword === '' || name === '' || (isEnabled && website === '')) {
             alert('Please fill in all fields');
@@ -37,10 +32,6 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
         }
         if (!validatePassword(password)) {
             alert('Please enter a valid password');
-            return;
-        }
-        if (name.trim.length === 0 || (isEnabled && website.trim.length === 0)) {
-            alert('Please enter a valid name and website');
             return;
         }
         if (phone.length !== 8) {
