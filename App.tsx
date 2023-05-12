@@ -52,7 +52,7 @@ export default function App() {
         <Stack.Navigator initialRouteName='Home'>
           <Stack.Screen name="Home" component={JobList} options={({ navigation }) => ({
             title: 'Jobs',
-            headerRight: () => headerButtons({ navigation }),
+            headerRight: () => <Button style={styles.button} variant="contained" onClick={() => navigation.navigate("Home")}>Home</Button>,
           })} />
           <Stack.Screen name="DetailedJob" component={DetailedJob} options={({ navigation }) => ({
             title: 'Detailed Job',
@@ -69,7 +69,10 @@ export default function App() {
             title: 'Company Details',
             headerRight: () => headerButtons({ navigation }),
           })} />
-          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Login" component={Login} options={({ navigation }) => ({
+            headerRight: () => headerButtons({ navigation }),
+          })}
+          />
           <Stack.Screen name="Register" component={Register} options={({ navigation }) => ({
             headerRight: () => headerButtons({ navigation }),
           })} />
