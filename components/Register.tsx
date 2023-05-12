@@ -18,7 +18,7 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
     }
 
     const handleSubmit = async () => {
-        if (email === '' || password === '' || confirmPassword === '' || name === '' || (isEnabled && website === '')) {
+        if (email === '' || phone === '' || password === '' || confirmPassword === '' || name === '' || (isEnabled && website === '')) {
             alert('Please fill in all fields');
             return;
         }
@@ -32,10 +32,6 @@ const UserRegistration = ({ navigation }: { navigation: any }) => {
         }
         if (!validatePassword(password)) {
             alert('Please enter a valid password');
-            return;
-        }
-        if (phone.length !== 8) {
-            alert('Phone can only be 8 digits');
             return;
         }
 
