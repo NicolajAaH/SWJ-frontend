@@ -17,7 +17,6 @@ const Login = ({ navigation }: { navigation: any }) => {
 
     const handleLogin = async () => {
         if (!email || !password) return alert('Please enter your email and password');
-        if (email.trim.length === 0 || password.trim.length === 0) return alert('Please enter your email and password');
         try {
             const response = await fetch(`/api/auth/login`, {
                 method: 'POST',
