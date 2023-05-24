@@ -16,6 +16,8 @@ jobs:
     secrets:
         DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
         DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+        CERTIFICATE: ${{ secrets.CERTIFICATE }}
+        CERTIFICATE_KEY: ${{ secrets.CERTIFICATE_KEY }}
 
   deploy:
     permissions:
