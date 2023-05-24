@@ -10,10 +10,16 @@ on:
         required: true
       DOCKER_HUB_USERNAME:
         required: true
+      CERTIFICATE:
+        required: true
+      CERTIFICATE_KEY:
+        required: true
 
 env:
   DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
   DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+  CERTIFICATE_KEY: ${{ secrets.CERTIFICATE_KEY }}
+  CERTIFICATE: ${{ secrets.CERTIFICATE }}
   IMAGE_NAME: ${{ secrets.DOCKER_HUB_USERNAME }}/swj-frontend
 
 jobs:
@@ -31,11 +37,11 @@ jobs:
 
       - name: Write key
         run: |
-          echo "${{ secrets.CERTIFICATE_KEY }}" | base64 --decode > swj.key
+          echo "${{ env.CERTIFICATE_KEY }}" | base64 --decode > swj.key
 
       - name: Write certificate
         run: |
-          echo "${{ secrets.CERTIFICATE }}" | base64 --decode > swj.crt
+          echo "${{ env.CERTIFICATE }}" | base64 --decode > swj.crt
 
       - name: Build Docker Image
         uses: docker/build-push-action@v2
